@@ -15,5 +15,9 @@ export const routes: Routes = [
   {
     path: 'onitama',
     loadChildren: () => OnitamaModule
+  },
+  {
+    path: '**',
+    redirectTo: 'home'
   }
 ];
