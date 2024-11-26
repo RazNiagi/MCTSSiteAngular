@@ -12,12 +12,19 @@ import {ConnectFourPieceComponent} from "./connect-four-piece/connect-four-piece
 import {ConnectFourService} from "./connect-four.service";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {provideHttpClient} from "@angular/common/http";
+import {ConnectFourNewGameDialogComponent} from './connect-four-new-game-dialog/connect-four-new-game-dialog.component';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
     declarations: [ConnectFourComponent,
         ConnectFourBoardComponent,
-        ConnectFourPieceComponent
+        ConnectFourPieceComponent,
+        ConnectFourNewGameDialogComponent
     ],
     imports: [
         CommonModule,
@@ -26,11 +33,20 @@ import {provideHttpClient} from "@angular/common/http";
         MatButtonModule,
         MatIconModule,
         MatProgressSpinnerModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        FormsModule,
     ],
     providers: [
         NavBarService,
         ConnectFourService,
-        provideHttpClient()
+        provideHttpClient(),
+        {
+          provide: MatDialogRef,
+          useValue: {}
+        }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

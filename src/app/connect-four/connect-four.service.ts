@@ -9,6 +9,9 @@ import {ConnectFourGameStateDto} from '../model/connect-four-game-state-dto';
   providedIn: 'root'
 })
 export class ConnectFourService {
+  set botLevel(value: number) {
+    this._botLevel = value;
+  }
 
   private API_BASE_URL: string = 'http://localhost:8080/connect-four';
   private static EMPTY_BOARD: string[][] = [

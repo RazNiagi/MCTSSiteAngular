@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>New Game Options</h2>
+<mat-dialog-content>
+  <p>What level bot would you like to play?</p>
+  <mat-form-field>
+    <mat-label>Bot Level</mat-label>
+    <mat-select [(ngModel)]="botLevel" required>
+        <mat-option [value]="level" *ngFor="let level of botLevels">{{level}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button (click)="onPlayClick()">Play</button>
+</mat-dialog-actions>
