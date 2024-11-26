@@ -3,3 +3,9 @@
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+html,
+body {
+  height: 100%;
+  background-color: rgba(185,185,185, 1);
+}

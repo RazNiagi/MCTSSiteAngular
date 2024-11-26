@@ -4,11 +4,11 @@ import {
   NO_ERRORS_SCHEMA,
 } from '@angular/core';
 import {NavBarService} from './nav-bar.service';
-import {Router, RouterLink} from '@angular/router';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {
-  NgbNavModule
-} from '@ng-bootstrap/ng-bootstrap';
+import {MatButtonModule} from '@angular/material/button';
+import {NavBarRoute} from '../model/nav-bar-route';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-nav-bar',
@@ -16,8 +16,10 @@ import {
   imports: [
     RouterLink,
     CommonModule,
-    NgbNavModule,
     NgOptimizedImage,
+    MatButtonModule,
+    MatToolbarModule,
+    RouterLinkActive,
   ],
   schemas: [
     NO_ERRORS_SCHEMA
@@ -30,12 +32,12 @@ export class NavBarComponent implements AfterContentChecked {
   constructor(private _navBarService: NavBarService, private _router: Router) {
   }
 
-  public getRoutes(): string[] {
+  public getRoutes(): NavBarRoute[] {
     return this._navBarService.getRoutes();
   }
 
   public ngAfterContentChecked() {
-    let potentialActiveId = this.getRoutes().findIndex(str => "/" + str.toLowerCase().split(' ').join("-") === this._router.url);
+    let potentialActiveId = this.getRoutes().findIndex(nbr => "/" + nbr.path === this._router.url);
     this.activeId = potentialActiveId === -1 ? 0 : potentialActiveId;
   }
 }

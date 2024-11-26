@@ -1,0 +1,24 @@
+<table style="height: 100%; width: 100%">
+  <tbody>
+    <tr *ngFor="let row of getCurrentBoard(); let i = index">
+      <td *ngFor="let col of row; let j = index" (click)="attemptMove(j)"
+          (mouseenter)="setGhostLocation(j)"
+          (mouseleave)="resetGhostLocation()"
+      style="position: relative">
+        <app-connect-four-piece *ngIf="!isLoading() && !isGameOver() && isGhostLocation(5-i, j)"
+                                [row]="5-i"
+                                [col]="j"
+                                [color]="col"
+                                [ghost]="false"
+                                style="height: 100%; width: 100%; position: absolute; top: 0; left: 0;"></app-connect-four-piece>
+        <app-connect-four-piece
+          [row]="5-i"
+          [col]="j"
+          [color]="getColorIfNotGhostLocation(5-i, j)"
+          [ghost]="!isLoading() && !isGameOver() && isGhostLocation(5-i, j)"
+          style="height: 100%; width: 100%; position: absolute; top: 0; left: 0;"></app-connect-four-piece>
+      </td>
+    </tr>
+  </tbody>
+</table>
+

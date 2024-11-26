@@ -5,4 +5,8 @@ export class ConnectFourGameState extends BaseGameState {
   constructor(board: string[][], currentTurn: string, boardGameScore: BoardGameScore = BoardGameScore.UNDETERMINED) {
     super(board, currentTurn, boardGameScore);
   }
+
+  public switchTurn(): void {
+    this.setCurrentTurn(this.getCurrentTurn() === 'r' ? 'y' : 'r');
+  }
 }

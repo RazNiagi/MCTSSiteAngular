@@ -1,5 +1,7 @@
-<ul ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="activeId">
-  <li *ngFor="let route of getRoutes(); let i = index;" [ngbNavItem]="i">
-    <button ngbNavLink [routerLink]="route.toLowerCase().split(' ').join('-')">{{route}}</button>
-  </li>
-</ul>
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span>
+      <button *ngFor="let route of getRoutes()" mat-raised-button [routerLink]="route.path" routerLinkActive="active">{{route.label}}</button>
+    </span>
+  </mat-toolbar-row>
+</mat-toolbar>

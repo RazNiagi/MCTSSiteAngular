@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {NavBarRoute} from '../model/nav-bar-route';
 
 @Injectable({
   providedIn: 'root'
@@ -6,14 +7,23 @@ import { Injectable } from '@angular/core';
 export class NavBarService {
 
   public selectedRoute: string = 'Home';
-  private _routes: string[] = [];
+  private _routes: NavBarRoute[] = [];
   constructor() { }
 
   public init(): void {
     this._routes = [
-      'Home',
-      'Connect Four',
-      'Onitama'
+      {
+        path: 'home',
+        label: 'Home',
+      },
+      {
+        path: 'connect-four',
+        label: 'Connect Four',
+      },
+      {
+        path: 'onitama',
+        label: 'Onitama',
+      }
     ];
   }
 
@@ -25,15 +35,15 @@ export class NavBarService {
     return this.selectedRoute;
   }
 
-  public addRoute(route: string) {
-    this._routes.push(route);
+  public addRoute(route: string, label: string) {
+    this._routes.push(new NavBarRoute(route, label));
   }
 
   public removeRoute(route: string) {
-    this._routes.splice(this._routes.indexOf(route), 1);
+    this._routes.splice(this._routes.findIndex(navBarRoute => navBarRoute.path === route), 1);
   }
 
-  public getRoutes() {
+  public getRoutes(): NavBarRoute[] {
     return this._routes;
   }
 }
