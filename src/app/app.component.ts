@@ -12,7 +12,7 @@ import {NavBarService} from './nav-bar/nav-bar.service';
 })
 export class AppComponent implements OnInit {
   title = 'MCTSSiteAngular';
-  constructor(private _navBarService: NavBarService,) {
+  constructor(private _navBarService: NavBarService) {
   }
 
   ngOnInit() {

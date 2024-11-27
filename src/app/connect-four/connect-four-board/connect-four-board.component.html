@@ -1,4 +1,4 @@
-<table style="height: 100%; width: 100%">
+<table style="height: 100%; width: 100%" id="connect-four-board-table">
   <tbody>
     <tr *ngFor="let row of getCurrentBoard(); let i = index">
       <td *ngFor="let col of row; let j = index" (click)="attemptMove(j)"

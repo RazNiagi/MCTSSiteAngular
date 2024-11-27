@@ -19,11 +19,6 @@ export class ConnectFourBoardComponent {
     return this._connectFourService.getGhostLocation();
   }
 
-  public getGhostLocationLogged(): void {
-    console.log(this.getCurrentBoard())
-    console.log(this._connectFourService.getGhostLocation());
-  }
-
   public isGhostLocation(row: number, column: number): boolean {
     let ghostLocation = this.getGhostLocation();
     return ghostLocation.row === row && ghostLocation.column === column;

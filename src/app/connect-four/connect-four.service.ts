@@ -1,16 +1,26 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {RowCol} from '../model/row-column';
 import {ConnectFourGameState} from '../model/connect-four-game-state';
 import {HttpClient} from '@angular/common/http';
 import {BoardGameScore} from '../enums/board-game-score';
 import {ConnectFourGameStateDto} from '../model/connect-four-game-state-dto';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {
+  ConnectionErrorSnackbarComponent
+} from '../shared/connection-error-snackbar/connection-error-snackbar.component';
+import {LevelErrorSnackbarComponent} from '../shared/level-error-snackbar/level-error-snackbar.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConnectFourService {
+  private _snackbar = inject(MatSnackBar);
   set botLevel(value: number) {
     this._botLevel = value;
+  }
+
+  public getBotLevel(): number {
+    return this._botLevel;
   }
 
   private API_BASE_URL: string = 'http://localhost:8080/connect-four';
@@ -89,6 +99,8 @@ export class ConnectFourService {
     this._currentGameState.switchTurn();
     const newScore = this.evaluateBoardForWin(this._currentGameState);
     if (newScore !== BoardGameScore.UNDETERMINED) {
+      this._currentGameState.setBoardGameScore(newScore);
+      this.popSnackbarIfApplicable();
       this._gameOver = true;
       this._loading = false;
       return;
@@ -100,18 +112,54 @@ export class ConnectFourService {
           this._currentGameState = Object.assign(this._currentGameState, data);
           this.setGhostLocation(column);
           if (this._currentGameState.getBoardGameScore() !== BoardGameScore.UNDETERMINED) {
+            this.popSnackbarIfApplicable();
             this._gameOver = true;
           }
           this._loading = false;
       },
         error: error => {
-          console.error(error.error);
+          console.error(error);
+          if (error.status === 0) {
+            this._snackbar.openFromComponent(ConnectionErrorSnackbarComponent, {
+              duration: 3000
+            });
+          }
+          if (error.status === 400) {
+            if (error.error === 'Level must be between 1 and 10') {
+              this._snackbar.openFromComponent(LevelErrorSnackbarComponent, {
+                duration: 3000
+              });
+            }
+          }
           this._currentGameState.getBoard()[this._lastPlacedPiece.row][this._lastPlacedPiece.column] = '-';
           this._currentGameState.switchTurn();
           this._loading = false;
       }
     });
   }
+
+  public popSnackbarIfApplicable(): void {
+      switch (this._currentGameState.getBoardGameScore()) {
+        case BoardGameScore.RED_WIN:
+          this._snackbar.open('Red wins!', 'Ok', {
+            duration: 3000
+          })
+          break;
+        case BoardGameScore.YELLOW_WIN:
+          this._snackbar.open('Yellow wins!', 'Ok', {
+            duration: 3000
+          })
+          break;
+        case BoardGameScore.TIE:
+          this._snackbar.open('Draw!', 'Ok', {
+            duration: 3000
+          })
+          break;
+        case BoardGameScore.UNDETERMINED:
+        default:
+          break;
+      }
+    }
 
   public isLoading(): boolean {
     return this._loading;
