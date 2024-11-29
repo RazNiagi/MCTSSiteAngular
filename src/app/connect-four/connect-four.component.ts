@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {ConnectFourService} from './connect-four.service';
 import {MatDialog} from '@angular/material/dialog';
-import {ConnectFourNewGameDialogComponent} from './connect-four-new-game-dialog/connect-four-new-game-dialog.component';
+import {NewGameDialogComponent} from '../shared/new-game-dialog/new-game-dialog.component';
 
 @Component({
   selector: 'app-connect-four',
@@ -32,11 +32,13 @@ export class ConnectFourComponent implements OnInit {
   }
 
   public openNewGameDialog(): void {
-    const dialogRef = this.dialog.open(ConnectFourNewGameDialogComponent);
+    const dialogRef = this.dialog.open(NewGameDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
-      this._connectFourService.botLevel = result;
-      this.resetBoard();
+      if (result) {
+        this._connectFourService.botLevel = result;
+        this.resetBoard();
+      }
     })
   }
 

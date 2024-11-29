@@ -3,12 +3,12 @@ import {OnitamaSimpleMovementCard} from './onitama-simple-movement-card';
 import {OnitamaMove} from './onitama-move';
 
 export class OnitamaMovementCard extends OnitamaSimpleMovementCard {
-  private stampColor: string;
-  private quote: string;
-  private movementBias: OnitamaMovementBias;
-  private expansion: string;
+  public stampColor: string;
+  public quote: string;
+  public movementBias: OnitamaMovementBias;
+  public expansion: string;
 
-  constructor(name: string, movesAvailable: OnitamaMove[], studentOnlyMoves: OnitamaMove[], masterOnlyMoves: OnitamaMove[],
+  constructor(name: string, movesAvailable: OnitamaMove[], studentOnlyMoves: OnitamaMove[] | undefined, masterOnlyMoves: OnitamaMove[] | undefined,
                stampColor: string, quote: string, movementBias: OnitamaMovementBias, expansion: string) {
     super(name, movesAvailable, studentOnlyMoves, masterOnlyMoves);
     this.stampColor = stampColor;

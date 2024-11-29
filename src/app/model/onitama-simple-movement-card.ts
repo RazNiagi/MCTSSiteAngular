@@ -1,12 +1,12 @@
 import {OnitamaMove} from './onitama-move';
 
 export class OnitamaSimpleMovementCard {
-  private name: string;
-  private movesAvailable: OnitamaMove[];
-  private studentOnlyMoves: OnitamaMove[];
-  private masterOnlyMoves: OnitamaMove[];
+  public name: string;
+  public movesAvailable: OnitamaMove[];
+  public studentOnlyMoves: OnitamaMove[] | undefined;
+  public masterOnlyMoves: OnitamaMove[] | undefined;
 
-  constructor(name: string, movesAvailable: OnitamaMove[], studentOnlyMoves: OnitamaMove[], masterOnlyMoves: OnitamaMove[]) {
+  constructor(name: string, movesAvailable: OnitamaMove[], studentOnlyMoves: OnitamaMove[] | undefined = undefined, masterOnlyMoves: OnitamaMove[] | undefined = undefined) {
     this.name = name;
     this.movesAvailable = movesAvailable;
     this.studentOnlyMoves = studentOnlyMoves;

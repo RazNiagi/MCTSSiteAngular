@@ -1,2 +1,55 @@
-<p>onitama works!</p>
-test
+<div class="container-fluid" id="onitama-container">
+  <div class="row" style="height: 10%">
+    <div class="col-5"></div>
+    <div class="col-2" style="justify-items: center; align-items: center; justify-content: center; display: flex">
+      <mat-chip [disabled]="true">Bot Level: {{getBotLevel()}}</mat-chip>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-1" style="justify-items: center; align-items: center; justify-content: center; display: flex">
+      <mat-spinner *ngIf="isLoading()" style="height: 50%; width: 50%;"></mat-spinner>
+    </div>
+    <div class="col-1" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex">
+      <button mat-fab extended (click)="openSettingsDialog()"><mat-icon>settings</mat-icon>Settings</button>
+    </div>
+  </div>
+  <div class="row" style="height: 15%">
+    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+    <div class="col-8" id="onitama-opponent-cards-container-column"
+         style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex">
+      <app-onitama-movement-card></app-onitama-movement-card>
+      <app-onitama-movement-card></app-onitama-movement-card>
+    </div>
+    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+  </div>
+  <div class="row" style="height: 50%">
+    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+    <div class="col-8" id="onitama-container-column"
+         style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"
+         (window:resize)="onResize()">
+      <app-onitama-board></app-onitama-board>
+    </div>
+    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"
+    id="onitama-middle-card-container">
+      <app-onitama-movement-card></app-onitama-movement-card>
+    </div>
+  </div>
+  <div class="row" style="height: 15%">
+    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+    <div class="col-8" id="onitama-own-cards-container-column"
+         style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex">
+      <app-onitama-movement-card></app-onitama-movement-card>
+      <app-onitama-movement-card></app-onitama-movement-card>
+    </div>
+    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+  </div>
+  <div class="row" style="height: 10%">
+    <div class="col-5"></div>
+    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex">
+      <button mat-fab extended (click)="openNewGameDialog()">
+        <mat-icon>add</mat-icon>
+        New Game
+      </button>
+    </div>
+    <div class="col-5"></div>
+  </div>
+</div>

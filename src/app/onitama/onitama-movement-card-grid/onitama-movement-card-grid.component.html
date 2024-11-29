@@ -1,0 +1,21 @@
+<div style="width: 135px; text-align: center; justify-content: center; align-items: center; display: flex" [ngStyle]="doesCardHaveStudentMasterMoves()">
+  <table *ngIf="squaresThatShouldBeHighlighted.length > 0" style="height: 90%; width: 90%">
+    <tbody>
+    <tr *ngFor="let row of numsReverse">
+      <td *ngFor="let col of nums" class="onitama-square" [ngClass]="getClassesForSquare(row, col, 'general')"></td>
+    </tr>
+    </tbody>
+  </table>
+  <table *ngIf="squaresThatShouldBeHighlightedStudent.length > 0" style="height: 90%; width: 90%; align-items: center; justify-content: center">
+    <tbody [ngClass]="getStyleForHeightTbody()">
+    <tr *ngFor="let row of numsReverse">
+      <td *ngFor="let col of nums" class="onitama-square" [ngClass]="getClassesForSquare(row, col, 'student')">{{getLetterForMiddleSquare(row, col, 'student')}}</td>
+    </tr>
+    <br/>
+    <tr *ngFor="let row of numsReverse">
+      <td *ngFor="let col of nums" class="onitama-square" [ngClass]="getClassesForSquare(row, col, 'master')">{{getLetterForMiddleSquare(row, col, 'master')}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+

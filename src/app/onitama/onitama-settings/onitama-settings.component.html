@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Onitama Options</h2>
+<mat-dialog-content>
+  <p>What color would you like to play as?</p>
+  <mat-radio-group [(ngModel)]="options.playAsColor" required>
+    <mat-radio-button value="r">Red</mat-radio-button>
+    <mat-radio-button value="b">Blue</mat-radio-button>
+  </mat-radio-group>
+  <p>Which cards should be enabled?</p>
+  <span *ngFor="let expansionCards of onitamaExpansionCards">
+    <mat-checkbox [checked]="expansionCards.enabled"
+                  [indeterminate]="expansionCards.partiallyEnabled"
+                  (change)="updateAllCardsForExpansion($event.checked, expansionCards.expansionName)"
+    style="height: 50px">{{getExpansionNameForDisplay(expansionCards.expansionName)}}</mat-checkbox>
+    <span>
+      <ul>
+        <li *ngFor="let card of expansionCards.cardList" class="row"
+            [ngStyle]="doesCardHaveStudentMasterMoves(card)"
+            [ngClass]="getEnabledCardClass(card)">
+          <mat-checkbox [checked]="card.enabled"
+                        (change)="updateCardWithExpansion(expansionCards.expansionName, card.movementCard.name, $event.checked)" class="col-6">{{card.movementCard.name}}</mat-checkbox>
+          <app-onitama-movement-card-grid [movementCard]="card.movementCard" class="col-6" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex" [ngStyle]=""></app-onitama-movement-card-grid>
+        </li>
+      </ul>
+    </span>
+  </span>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button (click)="onSaveClick()"><mat-icon>save_as</mat-icon>Save</button>
+</mat-dialog-actions>
