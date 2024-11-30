@@ -28,14 +28,14 @@ export class OnitamaExpansionEnabler {
 }
 
 @Component({
-  selector: 'app-onitama-settings',
-  templateUrl: './onitama-settings.component.html',
-  styleUrl: './onitama-settings.component.scss',
+  selector: 'app-onitama-settings-dialog',
+  templateUrl: './onitama-settings-dialog.component.html',
+  styleUrl: './onitama-settings-dialog.component.scss',
 })
-export class OnitamaSettingsComponent implements OnInit {
+export class OnitamaSettingsDialogComponent implements OnInit {
   public options: OnitamaOptions = new OnitamaOptions('r');
   public onitamaExpansionCards: OnitamaExpansionEnabler[] = [];
-  readonly dialogRef = inject(MatDialogRef<OnitamaSettingsComponent>);
+  readonly dialogRef = inject(MatDialogRef<OnitamaSettingsDialogComponent>);
 
   public onCancelClick(): void {
     this.dialogRef.close()

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 
 import { OnitamaRoutingModule } from './onitama-routing.module';
 import {OnitamaComponent} from './onitama.component';
@@ -10,7 +10,6 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {provideHttpClient} from "@angular/common/http";
 import {OnitamaService} from "./onitama.service";
-import {OnitamaSettingsComponent} from "./onitama-settings/onitama-settings.component";
 import {MatSelectModule} from "@angular/material/select";
 import {MatDialogModule} from "@angular/material/dialog";
 import {FormsModule} from "@angular/forms";
@@ -20,28 +19,32 @@ import {OnitamaMovementCardGridComponent} from "./onitama-movement-card-grid/oni
 import {ReversePipe} from "../reverse.pipe";
 import {OnitamaBoardComponent} from './onitama-board/onitama-board.component';
 import {OnitamaMovementCardComponent} from './onitama-movement-card/onitama-movement-card.component';
+import {OnitamaPieceComponent} from './onitama-piece/onitama-piece.component';
+import {OnitamaSettingsDialogComponent} from './onitama-settings-dialog/onitama-settings-dialog.component';
 
 
 @NgModule({
   declarations: [OnitamaComponent,
-      OnitamaSettingsComponent,
+    OnitamaSettingsDialogComponent,
       OnitamaMovementCardGridComponent,
     OnitamaBoardComponent,
-    OnitamaMovementCardComponent],
-    imports: [
-        CommonModule,
-        OnitamaRoutingModule,
-        MatButtonModule,
-        MatChipsModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatSelectModule,
-        MatDialogModule,
-        FormsModule,
-        MatRadioModule,
-        MatCheckboxModule,
-        ReversePipe
-    ],
+    OnitamaMovementCardComponent,
+    OnitamaPieceComponent],
+  imports: [
+    CommonModule,
+    OnitamaRoutingModule,
+    MatButtonModule,
+    MatChipsModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatDialogModule,
+    FormsModule,
+    MatRadioModule,
+    MatCheckboxModule,
+    ReversePipe,
+    NgOptimizedImage
+  ],
   providers: [
     NavBarService,
       OnitamaService,

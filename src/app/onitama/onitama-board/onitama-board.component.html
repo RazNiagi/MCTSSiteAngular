@@ -1,1 +1,12 @@
-<p>onitama-board works!</p>
+<table>
+  <tbody>
+  <tr *ngFor="let row of reverseRange5">
+    <td *ngFor="let col of reverseRange5">
+      <app-onitama-piece [piece]="getCurrentBoard()[row][col]"
+                         [row]="row"
+                         [col]="col"
+                         style="height: 100%; width: 100%"></app-onitama-piece>
+    </td>
+  </tr>
+  </tbody>
+</table>

@@ -1,8 +1,8 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {OnitamaService} from './onitama.service';
-import {OnitamaSettingsComponent} from './onitama-settings/onitama-settings.component';
 import {NewGameDialogComponent} from '../shared/new-game-dialog/new-game-dialog.component';
+import {OnitamaSettingsDialogComponent} from './onitama-settings-dialog/onitama-settings-dialog.component';
 
 @Component({
   selector: 'app-onitama',
@@ -34,7 +34,7 @@ export class OnitamaComponent implements OnInit{
   }
 
   public openSettingsDialog(): void {
-    const dialogRef = this.dialog.open(OnitamaSettingsComponent, {
+    const dialogRef = this.dialog.open(OnitamaSettingsDialogComponent, {
       width: '500px'
     });
 

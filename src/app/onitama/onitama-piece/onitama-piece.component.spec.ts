@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OnitamaSettingsComponent } from './onitama-settings.component';
+import { OnitamaPieceComponent } from './onitama-piece.component';
 
-describe('OnitamaSettingsComponent', () => {
-  let component: OnitamaSettingsComponent;
-  let fixture: ComponentFixture<OnitamaSettingsComponent>;
+describe('OnitamaPieceComponent', () => {
+  let component: OnitamaPieceComponent;
+  let fixture: ComponentFixture<OnitamaPieceComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OnitamaSettingsComponent]
+      imports: [OnitamaPieceComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(OnitamaSettingsComponent);
+    fixture = TestBed.createComponent(OnitamaPieceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
