@@ -1,0 +1,21 @@
+div.background-div {
+  border: 1px solid black;
+  background-color: tan;
+}
+
+div.selected {
+  border: 2px solid green;
+}
+
+div.stamp-color-div {
+  border: 1px solid black;
+  color: white;
+}
+
+div.stamp-color-div.red {
+  background-color: rgba(255, 143, 143, 1);
+}
+
+div.stamp-color-div.blue {
+  background-color: rgba(145, 216, 255, 1);
+}

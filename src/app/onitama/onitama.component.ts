@@ -3,6 +3,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {OnitamaService} from './onitama.service';
 import {NewGameDialogComponent} from '../shared/new-game-dialog/new-game-dialog.component';
 import {OnitamaSettingsDialogComponent} from './onitama-settings-dialog/onitama-settings-dialog.component';
+import {OnitamaMovementCard} from '../model/onitama-movement-card';
+import {WidthHeight} from '../model/width-height';
 
 @Component({
   selector: 'app-onitama',
@@ -11,10 +13,8 @@ import {OnitamaSettingsDialogComponent} from './onitama-settings-dialog/onitama-
 })
 export class OnitamaComponent implements OnInit{
   readonly dialog = inject(MatDialog);
-  public onitamaBoardDimensions = {
-    height: '100%',
-    width: '100%'
-  }
+  public onitamaBoardDimensions = new WidthHeight('500px', '500px');
+  public movementCardDimensions: WidthHeight = new WidthHeight('160px', '90px');
 
   constructor(private _onitamaService: OnitamaService) {
   }
@@ -41,14 +41,19 @@ export class OnitamaComponent implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this._onitamaService.options = result;
+        this._onitamaService.saveOptionsToLocalStorage();
       }
     })
   }
 
   onResize(): void {
-    let el = document.getElementById('connect-four-container-column');
+    let el = document.getElementById('onitama-container-column');
     if (el !== null) {
       this.calculateBoardDimensions(el);
+    }
+    let movementCardEl = document.getElementById('opponent-movement-card-0');
+    if (movementCardEl !== null) {
+      this.calculateMovementCardDimensions(movementCardEl);
     }
   }
 
@@ -57,10 +62,16 @@ export class OnitamaComponent implements OnInit{
     let widthPerSquare = (el.offsetWidth - 24) / 5;
     let squareSide = Math.min(heightPerSquare, widthPerSquare);
     let squareParam = (5 * squareSide) + 'px';
-    this.onitamaBoardDimensions = {
-      height: squareParam,
-      width: squareParam
-    };
+    this.onitamaBoardDimensions = new WidthHeight(squareParam, squareParam);
+  }
+
+  public calculateMovementCardDimensions(el: HTMLElement): void {
+    let heightPerSquare = el.offsetHeight / 9;
+    let widthPerSquare = (el.offsetWidth - 24) / 16;
+    let squareSide = Math.min(heightPerSquare, widthPerSquare);
+    let height: string = (9 * squareSide) * .95 + 'px';
+    let width: string = (16 * squareSide) * .95 + 'px';
+    this.movementCardDimensions = new WidthHeight(width, height);
   }
 
   public getBotLevel(): number {
@@ -76,5 +87,30 @@ export class OnitamaComponent implements OnInit{
         this.resetBoard();
       }
     })
+  }
+
+  public selectMovementCard(name: string): void {
+    if (this._onitamaService.getCurrentTurn() !== this._onitamaService.playingCurrentGameAs || this._onitamaService.gameOver) {
+      return;
+    }
+    this._onitamaService.selectedMovementCard = this._onitamaService.selectedMovementCard === name
+      ? ''
+      : name;
+  }
+
+  public getPlayerMovementCards(): OnitamaMovementCard[] {
+    return this._onitamaService.getPlayerMovementCards();
+  }
+
+  public getOpponentMovementCards(): OnitamaMovementCard[] {
+    return this._onitamaService.getOpponentMovementCards();
+  }
+
+  public getMiddleMovementCard(): OnitamaMovementCard {
+    return this._onitamaService.getMiddleMovementCard();
+  }
+
+  public isCardSelected(name: string): boolean {
+    return this._onitamaService.selectedMovementCard === name;
   }
 }

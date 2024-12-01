@@ -21,6 +21,9 @@ import {OnitamaBoardComponent} from './onitama-board/onitama-board.component';
 import {OnitamaMovementCardComponent} from './onitama-movement-card/onitama-movement-card.component';
 import {OnitamaPieceComponent} from './onitama-piece/onitama-piece.component';
 import {OnitamaSettingsDialogComponent} from './onitama-settings-dialog/onitama-settings-dialog.component';
+import {
+  OnitamaMovementCardMiniGridComponent
+} from './onitama-movement-card-mini-grid/onitama-movement-card-mini-grid.component';
 
 
 @NgModule({
@@ -29,7 +32,8 @@ import {OnitamaSettingsDialogComponent} from './onitama-settings-dialog/onitama-
       OnitamaMovementCardGridComponent,
     OnitamaBoardComponent,
     OnitamaMovementCardComponent,
-    OnitamaPieceComponent],
+    OnitamaPieceComponent,
+    OnitamaMovementCardMiniGridComponent],
   imports: [
     CommonModule,
     OnitamaRoutingModule,

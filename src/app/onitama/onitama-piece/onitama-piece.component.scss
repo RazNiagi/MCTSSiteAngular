@@ -3,3 +3,8 @@ div {
   -ms-user-select: none;
   user-select: none;
 }
+
+.selected {
+  border: solid 1px green;
+  background-color: green;
+}

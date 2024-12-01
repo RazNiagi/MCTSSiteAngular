@@ -1,0 +1,7 @@
+<table [ngStyle]="widthHeight">
+  <tbody>
+  <tr *ngFor="let row of numsReverse">
+    <td *ngFor="let col of nums" class="onitama-square" [ngClass]="getClassesForSquare(row, col, 'general')"></td>
+  </tr>
+  </tbody>
+</table>

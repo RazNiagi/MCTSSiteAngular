@@ -1,6 +1,6 @@
-<img src="assets/BlueKing.png" [id]="getPieceId()" [ngClass]="getClassForPiece(piece)" *ngIf="piece == 'B'" alt="B" style="width: 100px; height: 100px"/>
-<img src="assets/BluePawn.png" [id]="getPieceId()" [ngClass]="getClassForPiece(piece)" *ngIf="piece == 'b'" alt="b" style="width: 100px; height: 100px"/>
-<img src="assets/RedKing.png" [id]="getPieceId()" [ngClass]="getClassForPiece(piece)" *ngIf="piece == 'R'" alt="R" style="width: 100px; height: 100px"/>
-<img src="assets/RedPawn.png" [id]="getPieceId()" [ngClass]="getClassForPiece(piece)" *ngIf="piece == 'r'" alt="r" style="width: 100px; height: 100px"/>
-<div [id]="getPieceId()" [ngClass]="getClassForPiece(piece)" *ngIf="piece == '-'" style="height: 100px; width: 100px"></div>
+<img src="assets/BlueKing.png" [id]="getPieceId()" [ngClass]="getAllClasses()" *ngIf="piece == 'B'" alt="B" [ngStyle]="widthHeight"/>
+<img src="assets/BluePawn.png" [id]="getPieceId()" [ngClass]="getAllClasses()" *ngIf="piece == 'b'" alt="b" [ngStyle]="widthHeight"/>
+<img src="assets/RedKing.png" [id]="getPieceId()" [ngClass]="getAllClasses()" *ngIf="piece == 'R'" alt="R" [ngStyle]="widthHeight"/>
+<img src="assets/RedPawn.png" [id]="getPieceId()" [ngClass]="getAllClasses()" *ngIf="piece == 'r'" alt="r" [ngStyle]="widthHeight"/>
+<div [id]="getPieceId()" [ngClass]="getAllClasses()" *ngIf="piece == '-'" [ngStyle]="widthHeight"></div>
 

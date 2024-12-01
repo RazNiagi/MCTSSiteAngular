@@ -13,34 +13,65 @@
     </div>
   </div>
   <div class="row" style="height: 15%">
-    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
-    <div class="col-8" id="onitama-opponent-cards-container-column"
+    <div class="col-3" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+    <div class="col-6" id="onitama-opponent-cards-container-column"
          style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex">
-      <app-onitama-movement-card></app-onitama-movement-card>
-      <app-onitama-movement-card></app-onitama-movement-card>
+      <div class="row" style="width: 100%; text-align: center; justify-content: center; align-items: center; height: 100%; display: flex; padding-bottom: 4px">
+        <app-onitama-movement-card
+          [movementCard]="getOpponentMovementCards()[0]"
+          [widthHeight]="movementCardDimensions"
+          id="opponent-movement-card-0"
+          class="col-6"
+          style="text-align: center; justify-content: right; align-items: end; height: 100%; display: flex"></app-onitama-movement-card>
+        <app-onitama-movement-card
+          [movementCard]="getOpponentMovementCards()[1]"
+          [widthHeight]="movementCardDimensions"
+          id="opponent-movement-card-1"
+          class="col-6"
+          style="text-align: center; justify-content: left; align-items: end; height: 100%; display: flex"></app-onitama-movement-card>
+      </div>
     </div>
-    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+    <div class="col-3" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
   </div>
   <div class="row" style="height: 50%">
-    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
-    <div class="col-8" id="onitama-container-column"
+    <div class="col-3" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+    <div class="col-6" id="onitama-container-column"
          style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"
          (window:resize)="onResize()">
-      <app-onitama-board></app-onitama-board>
+      <app-onitama-board [widthHeight]="onitamaBoardDimensions"></app-onitama-board>
     </div>
-    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"
+    <div class="col-3" style="text-align: center; justify-content: left; align-items: center; height: 100%; display: flex"
     id="onitama-middle-card-container">
-      <app-onitama-movement-card></app-onitama-movement-card>
+      <app-onitama-movement-card
+        [movementCard]="getMiddleMovementCard()"
+        [widthHeight]="movementCardDimensions"
+        id="middle-movement-card"
+        style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"
+      ></app-onitama-movement-card>
     </div>
   </div>
   <div class="row" style="height: 15%">
-    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
-    <div class="col-8" id="onitama-own-cards-container-column"
+    <div class="col-3" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+    <div class="col-6" id="onitama-own-cards-container-column"
          style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex">
-      <app-onitama-movement-card></app-onitama-movement-card>
-      <app-onitama-movement-card></app-onitama-movement-card>
+      <div class="row" style="width: 100%; text-align: center; justify-content: center; align-items: center; height: 100%; display: flex; padding-top: 4px">
+        <app-onitama-movement-card [movementCard]="getPlayerMovementCards()[0]"
+                                   [widthHeight]="movementCardDimensions"
+                                   [selected]="isCardSelected(getPlayerMovementCards()[0].name)"
+                                   (click)="selectMovementCard(getPlayerMovementCards()[0].name)"
+                                   id="player-movement-card-0"
+                                   class="col-6"
+                                   style="text-align: center; justify-content: right; align-items: start; height: 100%; display: flex"></app-onitama-movement-card>
+        <app-onitama-movement-card [movementCard]="getPlayerMovementCards()[1]"
+                                   [widthHeight]="movementCardDimensions"
+                                   [selected]="isCardSelected(getPlayerMovementCards()[1].name)"
+                                   (click)="selectMovementCard(getPlayerMovementCards()[1].name)"
+                                   id="player-movement-card-1"
+                                   class="col-6"
+                                   style="text-align: center; justify-content: left; align-items: start; height: 100%; display: flex"></app-onitama-movement-card>
+      </div>
     </div>
-    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
+    <div class="col-3" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex"></div>
   </div>
   <div class="row" style="height: 10%">
     <div class="col-5"></div>

@@ -1,14 +1,18 @@
-import {OnitamaSimpleMovementCard} from './onitama-simple-movement-card';
 import {BaseGameState} from './base-game-state';
 import {BoardGameScore} from '../enums/board-game-score';
+import {OnitamaMovementCard} from './onitama-movement-card';
 
 export class OnitamaGameState extends BaseGameState {
-  private bluePlayerMovementCards: OnitamaSimpleMovementCard[];
-  private redPlayerMovementCards: OnitamaSimpleMovementCard[];
-  private middleCard: OnitamaSimpleMovementCard;
+  public bluePlayerMovementCards: OnitamaMovementCard[];
+  public redPlayerMovementCards: OnitamaMovementCard[];
+  public middleCard: OnitamaMovementCard;
+
+  public switchTurn(): void {
+    this.setCurrentTurn(this.getCurrentTurn() === 'r' ? 'b' : 'r');
+  }
 
   constructor(board: string[][], currentTurn: string, boardGameScore: BoardGameScore = BoardGameScore.UNDETERMINED,
-              bluePlayerMovementCards: OnitamaSimpleMovementCard[] = [], redPlayerMovementCards: OnitamaSimpleMovementCard[] = [], middleCard: OnitamaSimpleMovementCard) {
+              bluePlayerMovementCards: OnitamaMovementCard[] = [], redPlayerMovementCards: OnitamaMovementCard[] = [], middleCard: OnitamaMovementCard) {
     super(board, currentTurn, boardGameScore);
     this.bluePlayerMovementCards = bluePlayerMovementCards;
     this.redPlayerMovementCards = redPlayerMovementCards;

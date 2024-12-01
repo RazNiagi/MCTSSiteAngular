@@ -16,4 +16,9 @@ export class OnitamaMovementCard extends OnitamaSimpleMovementCard {
     this.movementBias = movementBias;
     this.expansion = expansion;
   }
+
+  public static copy(other: OnitamaMovementCard): OnitamaMovementCard {
+    return new OnitamaMovementCard(other.name, other.movesAvailable, other.studentOnlyMoves, other.masterOnlyMoves,
+      other.stampColor, other.quote, other.movementBias, other.expansion);
+  }
 }

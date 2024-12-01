@@ -158,6 +158,7 @@ export class OnitamaSettingsDialogComponent implements OnInit {
   }
 
   public setAllCardsToServiceOptions(): void {
+    this.options.playAsColor = this._onitamaService.options.playAsColor;
     for (let [cardName, enabled] of this._onitamaService.options.enabledCards) {
       if (enabled !== undefined) {
         this.updateCard(cardName, enabled);

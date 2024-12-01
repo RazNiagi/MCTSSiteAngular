@@ -1,11 +1,25 @@
-<table>
-  <tbody>
+<table [ngStyle]="widthHeight">
+  <tbody *ngIf="isCurrentlyPlayersTurn()">
   <tr *ngFor="let row of reverseRange5">
-    <td *ngFor="let col of reverseRange5">
+    <td *ngFor="let col of reverseRange5" [ngClass]="getValidMoveClass(row, col)">
       <app-onitama-piece [piece]="getCurrentBoard()[row][col]"
                          [row]="row"
                          [col]="col"
-                         style="height: 100%; width: 100%"></app-onitama-piece>
+                         [widthHeight]="getPieceWidthHeight()"
+                         [selected]="isSelectedPiece(row, col)"
+                         (click)="selectPieceOrMove(row, col)"></app-onitama-piece>
+    </td>
+  </tr>
+  </tbody>
+  <tbody *ngIf="!isCurrentlyPlayersTurn()">
+  <tr *ngFor="let row of range5">
+    <td *ngFor="let col of range5" [ngClass]="getValidMoveClass(row, col)">
+      <app-onitama-piece [piece]="getCurrentBoard()[row][col]"
+                         [row]="row"
+                         [col]="col"
+                         [widthHeight]="getPieceWidthHeight()"
+                         [selected]="isSelectedPiece(row, col)"
+                         (click)="selectPieceOrMove(row, col)"></app-onitama-piece>
     </td>
   </tr>
   </tbody>
