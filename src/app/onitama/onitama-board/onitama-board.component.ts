@@ -3,6 +3,7 @@ import {OnitamaService} from '../onitama.service';
 import {WidthHeight} from '../../model/width-height';
 import {OnitamaMove} from '../../model/onitama-move';
 import {OnitamaMovementCard} from '../../model/onitama-movement-card';
+import {OnitamaCardBoardService} from '../onitama-card-board.service';
 
 @Component({
   selector: 'app-onitama-board',
@@ -15,7 +16,7 @@ export class OnitamaBoardComponent {
 
   @Input() widthHeight: WidthHeight = new WidthHeight('100px', '100px');
 
-  constructor(private _onitamaService: OnitamaService) {
+  constructor(private _onitamaService: OnitamaService, private _onitamaCardBoardService: OnitamaCardBoardService) {
   }
 
   public getCurrentBoard(): string[][] {
@@ -23,7 +24,7 @@ export class OnitamaBoardComponent {
   }
 
   public getReverseBoard(): string[][] {
-    return this._onitamaService.rotateBoard(this._onitamaService.copyBoard(this._onitamaService.getCurrentBoard()));
+    return this._onitamaCardBoardService.rotateBoard(this._onitamaCardBoardService.copyBoard(this._onitamaService.getCurrentBoard()));
   }
 
   public getPieceWidthHeight(): WidthHeight {
@@ -54,11 +55,39 @@ export class OnitamaBoardComponent {
     return this.isValidEndMove(row, col) ? 'valid-move' : 'invalid-move';
   }
 
+  public getTempleClass(row: number, col: number): string {
+    if (this._onitamaService.playingCurrentGameAs === 'r') {
+      if (row === 0 && col === 2) {
+        return this.isCurrentlyPlayersTurn() ? 'red-temple' : 'blue-temple';
+      }
+      if (row === 4 && col === 2) {
+        return this.isCurrentlyPlayersTurn() ? 'blue-temple' : 'red-temple';
+      }
+    } else {
+      if (row === 0 && col === 2) {
+        return this.isCurrentlyPlayersTurn() ? 'blue-temple' : 'red-temple';
+      }
+      if (row === 4 && col === 2) {
+        return this.isCurrentlyPlayersTurn() ? 'red-temple' : 'blue-temple';
+      }
+    }
+    return '';
+  }
+
+  public getTableSquareClass(row: number, col: number): string {
+    let toReturn: string = this.getValidMoveClass(row, col);
+    let templeClass: string = this.getTempleClass(row, col);
+    if (templeClass) {
+      toReturn = toReturn + ' ' + templeClass;
+    }
+    return toReturn;
+  }
+
   public isValidEndMove(row: number, col: number): boolean {
     if (!this._onitamaService.selectedMovementCard || this._onitamaService.selectedPiece.x === -1 || this._onitamaService.selectedPiece.y === -1) {
       return false;
     }
-    let selectedMoveCard: OnitamaMovementCard | undefined = this._onitamaService.getAllCards().find(card => card.name === this._onitamaService.selectedMovementCard);
+    let selectedMoveCard: OnitamaMovementCard | undefined = this._onitamaCardBoardService.getAllCards().find(card => card.name === this._onitamaService.selectedMovementCard);
     if (selectedMoveCard) {
       for (let move of selectedMoveCard.movesAvailable) {
         if (this._onitamaService.selectedPiece.y - move.x === col && this._onitamaService.selectedPiece.x + move.y === row) {
@@ -79,9 +108,5 @@ export class OnitamaBoardComponent {
 
   public isCurrentlyPlayersTurn(): boolean {
     return this._onitamaService.playingCurrentGameAs === this._onitamaService.getCurrentTurn();
-  }
-
-  public isLoading(): boolean {
-    return this._onitamaService.isLoading();
   }
 }

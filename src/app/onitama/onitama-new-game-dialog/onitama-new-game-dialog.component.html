@@ -1,0 +1,75 @@
+<h2 mat-dialog-title>New Game Options</h2>
+<mat-dialog-content (window:resize)="onResize()" id="onitama-new-game-dialog-content-container">
+  <mat-radio-group [(ngModel)]="newGameOrLoadPosition" aria-label="Would you like to play a new game or load a position?">
+    <mat-radio-button value="newGame">New Game</mat-radio-button>
+    <mat-radio-button value="loadPosition">Load Position</mat-radio-button>
+  </mat-radio-group>
+  <p>What level bot would you like to play?</p>
+  <mat-form-field>
+    <mat-label>Bot Level</mat-label>
+    <mat-select [(ngModel)]="botLevel" required>
+      <mat-option [value]="level" *ngFor="let level of botLevels">{{level}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <p *ngIf="shouldShowControlsForLoadingPosition()">
+    <mat-label>I want to play as:</mat-label>
+    <mat-radio-group [(ngModel)]="playAs" aria-label="I want to play as">
+      <mat-radio-button value="r">Red</mat-radio-button>
+      <mat-radio-button value="b">Blue</mat-radio-button>
+    </mat-radio-group>
+    <br/>
+    <mat-label>Whose turn is it?</mat-label>
+    <mat-radio-group [(ngModel)]="currentTurn" aria-label="Whose turn is it?">
+      <mat-radio-button value="r">Red</mat-radio-button>
+      <mat-radio-button value="b">Blue</mat-radio-button>
+    </mat-radio-group>
+    <br/>
+    Your move cards:
+    <br/>
+    <mat-form-field>
+      <mat-select [(ngModel)]="playerCards[0]" (selectionChange)="updateSelectedCards()" aria-label="Player card 1">
+        <mat-option [value]="playerCards[0]">{{playerCards[0]}}</mat-option>
+        <mat-option [value]="card" *ngFor="let card of getAllUnselectedCards()">{{card}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select [(ngModel)]="playerCards[1]" (selectionChange)="updateSelectedCards()" aria-label="Player card 2">
+        <mat-option [value]="playerCards[1]">{{playerCards[1]}}</mat-option>
+        <mat-option [value]="card" *ngFor="let card of getAllUnselectedCards()">{{card}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br/>
+    Middle move card:
+    <br/>
+    <mat-form-field>
+      <mat-select [(ngModel)]="middleCard" (selectionChange)="updateSelectedCards()" aria-label="Middle card">
+        <mat-option [value]="middleCard">{{middleCard}}</mat-option>
+        <mat-option [value]="card" *ngFor="let card of getAllUnselectedCards()">{{card}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br/>
+    Opp move cards:
+    <br/>
+    <mat-form-field>
+      <mat-select [(ngModel)]="opponentCards[0]" (selectionChange)="updateSelectedCards()" aria-label="Opponent card 1">
+        <mat-option [value]="opponentCards[0]">{{opponentCards[0]}}</mat-option>
+        <mat-option [value]="card" *ngFor="let card of getAllUnselectedCards()">{{card}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select [(ngModel)]="opponentCards[1]" (selectionChange)="updateSelectedCards()" aria-label="Opponent card 2">
+        <mat-option [value]="opponentCards[1]">{{opponentCards[1]}}</mat-option>
+        <mat-option [value]="card" *ngFor="let card of getAllUnselectedCards()">{{card}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br/>
+    <app-onitama-editor-board [widthHeight]="editorBoardWidthHeight"
+    [playingAs]="playAs"
+    [currentTurn]="currentTurn"
+    (boardEmitter)="setCurrentBoard($event)"></app-onitama-editor-board>
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button (click)="onPlayClick()">Play</button>
+</mat-dialog-actions>

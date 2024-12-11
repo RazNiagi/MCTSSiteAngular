@@ -1,16 +1,19 @@
 td {
   border: 1px solid black;
+}
+
+td.selected {
+  background-color: rgba(180, 180, 180, 1);
+}
+
+td.piece-td  {
   background-color: rgba(220, 220, 220, 1);
 }
 
-td.red-temple {
+td.piece-td.red-temple {
   background-color: rgba(255, 143, 143, 0.5);
 }
 
-td.blue-temple {
+td.piece-td.blue-temple {
   background-color: rgba(145, 216, 255, 0.5);
-}
-
-td.valid-move {
-  background-color: rgba(0, 128, 0, 0.3);
 }

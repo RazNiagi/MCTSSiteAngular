@@ -3,6 +3,7 @@ import {MatDialogRef} from '@angular/material/dialog';
 import {OnitamaOptions} from '../../model/onitama-options';
 import {OnitamaService} from '../onitama.service';
 import {OnitamaMovementCard} from '../../model/onitama-movement-card';
+import {OnitamaCardBoardService} from '../onitama-card-board.service';
 
 export class OnitamaMovementCardWithEnabledFlag {
   movementCard: OnitamaMovementCard;
@@ -46,7 +47,7 @@ export class OnitamaSettingsDialogComponent implements OnInit {
     this.dialogRef.close(this.options);
   }
 
-  constructor(private _onitamaService: OnitamaService) {
+  constructor(private _onitamaService: OnitamaService, private _onitamaCardBoardService: OnitamaCardBoardService) {
   }
 
   public ngOnInit() {
@@ -56,7 +57,7 @@ export class OnitamaSettingsDialogComponent implements OnInit {
   }
 
   public initializeAllCardsInOptions(): void {
-    for (let card of this._onitamaService.getAllCards()) {
+    for (let card of this._onitamaCardBoardService.getAllCards()) {
       if (!this.options.enabledCards.has(card.name)) {
         this.options.enabledCards.set(card.name, true);
       }
@@ -65,10 +66,10 @@ export class OnitamaSettingsDialogComponent implements OnInit {
 
   public initializeOnitamaExpansionEnabler(): void {
     this.onitamaExpansionCards = [];
-    let expansionSet: Set<string> = this._onitamaService.getAllExpansions();
+    let expansionSet: Set<string> = this._onitamaCardBoardService.getAllExpansions();
     let expansionArray: string[] = Array.from(expansionSet);
     for (let expansion of expansionArray) {
-      const listOfCards = this._onitamaService.getAllCardsFromExpansion(expansion).sort((a, b) => a.name.localeCompare(b.name));
+      const listOfCards = this._onitamaCardBoardService.getAllCardsFromExpansion(expansion).sort((a, b) => a.name.localeCompare(b.name));
       let listOfCardsWithFlags: OnitamaMovementCardWithEnabledFlag[] = [];
       for (let card of listOfCards) {
         listOfCardsWithFlags.push(new OnitamaMovementCardWithEnabledFlag(card, this.isCardEnabled(card.name)));
@@ -129,7 +130,7 @@ export class OnitamaSettingsDialogComponent implements OnInit {
   }
 
   public getExpansionNameForDisplay(expansion: string) {
-    return this._onitamaService.getExpansionNameForDisplay(expansion);
+    return this._onitamaCardBoardService.getExpansionNameForDisplay(expansion);
   }
 
   public changeOptionsOfAllCards(): void {

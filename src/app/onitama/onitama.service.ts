@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {OnitamaGameState} from '../model/onitama-game-state';
-import onitamaCards from './onitama-cards.json';
+// import onitamaCards from './onitama-cards.json';
 import {OnitamaMovementCard} from '../model/onitama-movement-card';
 import {BoardGameScore} from '../enums/board-game-score';
 import {OnitamaOptions} from '../model/onitama-options';
@@ -13,6 +13,8 @@ import {
 } from '../shared/connection-error-snackbar/connection-error-snackbar.component';
 import {LevelErrorSnackbarComponent} from '../shared/level-error-snackbar/level-error-snackbar.component';
 import {OnitamaMovementBias} from '../enums/onitama-movement-bias';
+import {OnitamaCardBoardService} from './onitama-card-board.service';
+import {OnitamaLoadGameDetails} from '../model/onitama-load-game-details';
 
 @Injectable({
   providedIn: 'root'
@@ -21,17 +23,17 @@ export class OnitamaService {
   get gameOver(): boolean {
     return this._gameOver;
   }
-
   set gameOver(value: boolean) {
     this._gameOver = value;
   }
+
   get playingCurrentGameAs(): string {
     return this._playingCurrentGameAs;
   }
+
   get selectedPiece(): OnitamaMove {
     return this._selectedPiece;
   }
-
   set selectedPiece(value: OnitamaMove) {
     this._selectedPiece = value;
   }
@@ -39,7 +41,6 @@ export class OnitamaService {
   get selectedMovementCard(): string {
     return this._selectedMovementCard;
   }
-
   set selectedMovementCard(value: string) {
     this._selectedMovementCard = value;
   }
@@ -47,10 +48,10 @@ export class OnitamaService {
   get options(): OnitamaOptions {
     return this._options;
   }
-
   set options(value: OnitamaOptions) {
     this._options = value;
   }
+
   private _snackbar = inject(MatSnackBar);
   set botLevel(value: number) {
     this._botLevel = value;
@@ -61,49 +62,22 @@ export class OnitamaService {
   }
 
   private API_BASE_URL: string = 'http://localhost:8080/onitama';
-  private static NEW_BOARD: string[][] = [
-    ["r", "r", "R", "r", "r"],
-    ["-", "-", "-", "-", "-"],
-    ["-", "-", "-", "-", "-"],
-    ["-", "-", "-", "-", "-"],
-    ["b", "b", "B", "b", "b"]
-  ];
   private _loading: boolean = false;
   private _botLevel: number = 1;
   private _gameOver: boolean = false;
-  private _onitamaCards: OnitamaMovementCard[] = [];
   private _currentGameState: OnitamaGameState | undefined;
   private _enabledCards: Map<string, boolean> = new Map<string, boolean>();
   private _options: OnitamaOptions = new OnitamaOptions('r');
   private _selectedMovementCard: string = '';
   private _selectedPiece: OnitamaMove = new OnitamaMove(-1, -1);
   private _playingCurrentGameAs: string = 'r';
-  private _defaultMovementCardsPlayer: OnitamaMovementCard[] = [];
-  private _defaultMovementCardsOpponent: OnitamaMovementCard[] = [];
-  private _defaultMovementCardMiddle: OnitamaMovementCard = new OnitamaMovementCard(onitamaCards[4].name, onitamaCards[4].movesAvailable,
-    onitamaCards[4].studentOnlyMoves, onitamaCards[4].masterOnlyMoves,
-    onitamaCards[4].stampColor, onitamaCards[4].quote,
-    onitamaCards[4].movementBias, onitamaCards[4].expansion);
   private _previousGameState: OnitamaGameState | undefined;
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, private _onitamaCardBoardService: OnitamaCardBoardService) { }
 
   public init() {
-    for (let card of onitamaCards) {
-      this._onitamaCards.push(new OnitamaMovementCard(card.name, card.movesAvailable, card.studentOnlyMoves, card.masterOnlyMoves,
-        card.stampColor, card.quote, card.movementBias, card.expansion));
-    }
+    this._onitamaCardBoardService.init();
     this.setEnabledCards();
-  }
-
-  public setDefaultGameState(): void {
-    this._defaultMovementCardsPlayer = [this._onitamaCards[0], this._onitamaCards[1]];
-    this._defaultMovementCardsOpponent = [this._onitamaCards[2], this._onitamaCards[3]];
-    this._defaultMovementCardMiddle = this._onitamaCards[4];
-    this._currentGameState = new OnitamaGameState(this.getNewBoard(), 'r', BoardGameScore.UNDETERMINED,
-      this._defaultMovementCardsPlayer, this._defaultMovementCardsOpponent,
-      this._defaultMovementCardMiddle);
-    this._playingCurrentGameAs = 'r';
   }
 
   public setEnabledCards() {
@@ -142,7 +116,7 @@ export class OnitamaService {
   }
 
   public resetEnabledCards(): void {
-    for (let card of this._onitamaCards) {
+    for (let card of this._onitamaCardBoardService.onitamaCards) {
       this._enabledCards.set(card.name, true);
       this.options.enabledCards.set(card.name, true);
     }
@@ -160,7 +134,7 @@ export class OnitamaService {
   }
 
   public generateNewBoardFromEnabledCards(): void {
-    let cardsEnabled = this.getAllCards();
+    let cardsEnabled = this._onitamaCardBoardService.getAllCards();
     for (let [cardName, enabled] of this._enabledCards) {
       if (!enabled) {
         cardsEnabled.splice(cardsEnabled.findIndex(card => card.name === cardName), 1);
@@ -185,14 +159,26 @@ export class OnitamaService {
     cardsEnabled.shift();
     bluePlayerCards.push(cardsEnabled[0]);
     cardsEnabled.shift();
-    let newBoard: string[][] = this.getNewBoard();
+    let newBoard: string[][] = this._onitamaCardBoardService.getNewBoard();
     if (this.playingCurrentGameAs === 'b') {
-      newBoard = this.rotateBoard(newBoard);
+      newBoard = this._onitamaCardBoardService.rotateBoard(newBoard);
     }
     this._currentGameState = new OnitamaGameState(newBoard, middleCard.stampColor, BoardGameScore.UNDETERMINED,
       bluePlayerCards, redPlayerCards, middleCard);
+    this._gameOver = false;
     if (this.playingCurrentGameAs !== this.getCurrentTurn()) {
-      this._currentGameState.setBoard(this.rotateBoard(this.getCurrentBoard()));
+      this._currentGameState.setBoard(this._onitamaCardBoardService.rotateBoard(this.getCurrentBoard()));
+      this.retrieveMove();
+    }
+  }
+
+  public loadNewBoard(loadGameDetails: OnitamaLoadGameDetails): void {
+    this._currentGameState = new OnitamaGameState(loadGameDetails.getBoard(), loadGameDetails.getCurrentTurn(), loadGameDetails.getBoardGameScore(),
+      loadGameDetails.bluePlayerMovementCards, loadGameDetails.redPlayerMovementCards, loadGameDetails.middleCard);
+    this._playingCurrentGameAs = loadGameDetails.playingAs;
+    this._botLevel = loadGameDetails.botLevel;
+    this._gameOver = false;
+    if (this.playingCurrentGameAs !== this.getCurrentTurn()) {
       this.retrieveMove();
     }
   }
@@ -204,55 +190,12 @@ export class OnitamaService {
     }
   }
 
-  public copyBoard(board: string[][]): string[][] {
-    let newBoard: string[][] = [];
-    for (let i = 0; i < board.length; i++) {
-      newBoard.push([...board[i]]);
-    }
-    return newBoard;
-  }
-
-  public getNewBoard(): string[][] {
-    return this.copyBoard(OnitamaService.NEW_BOARD);
-  }
-
   public getCurrentBoard(): string[][] {
-    return this._currentGameState ? this._currentGameState.getBoard() : OnitamaService.NEW_BOARD;
+    return this._currentGameState ? this._currentGameState.getBoard() : OnitamaCardBoardService.NEW_BOARD;
   }
 
   public getCurrentTurn(): string {
     return this._currentGameState ? this._currentGameState.getCurrentTurn() : 'r';
-  }
-
-  public getAllExpansions(): Set<string> {
-    let expansionSet = new Set<string>();
-    for (let card of this._onitamaCards) {
-      expansionSet.add(card.expansion);
-    }
-    return expansionSet;
-  }
-
-  public getExpansionNameForDisplay(expansion: string): string {
-    switch (expansion) {
-      case 'base':
-        return 'Base';
-      case 'senseisPath':
-        return 'Sensei\'s Path';
-      case 'wayOfTheWind':
-        return 'Way of the Wind';
-      case 'promotional':
-        return 'Promotional';
-      default:
-        return 'Unknown';
-    }
-  }
-
-  public getAllCardsFromExpansion(expansion: string): OnitamaMovementCard[] {
-    return [...this._onitamaCards.filter(card => card.expansion === expansion)];
-  }
-
-  public getAllCards(): OnitamaMovementCard[] {
-    return [...this._onitamaCards];
   }
 
   public setColorPlayingAs(): void {
@@ -267,7 +210,7 @@ export class OnitamaService {
         return this._currentGameState.bluePlayerMovementCards;
       }
     }
-    return this._defaultMovementCardsPlayer;
+    return this._onitamaCardBoardService.defaultMovementCardsPlayer;
   }
 
   public getOpponentMovementCards(): OnitamaMovementCard[] {
@@ -278,14 +221,14 @@ export class OnitamaService {
         return this._currentGameState.bluePlayerMovementCards;
       }
     }
-    return this._defaultMovementCardsOpponent;
+    return this._onitamaCardBoardService.defaultMovementCardsOpponent;
   }
 
   public getMiddleMovementCard(): OnitamaMovementCard {
     if (this._currentGameState) {
       return this._currentGameState.middleCard;
     }
-    return this._defaultMovementCardMiddle;
+    return this._onitamaCardBoardService.defaultMovementCardMiddle;
   }
 
   public makeMove(row: number, col: number): void {
@@ -297,7 +240,7 @@ export class OnitamaService {
       OnitamaMovementCard.copy(this._currentGameState.bluePlayerMovementCards[1])];
     let previousRedCards: OnitamaMovementCard[] = [OnitamaMovementCard.copy(this._currentGameState.redPlayerMovementCards[0]),
       OnitamaMovementCard.copy(this._currentGameState.redPlayerMovementCards[1])];
-    this._previousGameState = new OnitamaGameState(this.copyBoard(this._currentGameState.getBoard()),
+    this._previousGameState = new OnitamaGameState(this._onitamaCardBoardService.copyBoard(this._currentGameState.getBoard()),
       this._currentGameState.getCurrentTurn(),
       this._currentGameState.getBoardGameScore(),
       previousBlueCards,
@@ -309,8 +252,9 @@ export class OnitamaService {
     this.selectedPiece = new OnitamaMove(-1, -1);
     this.swapMiddleCard(this._selectedMovementCard);
     this._selectedMovementCard = '';
-    this._currentGameState.setBoard(this.rotateBoard(this._currentGameState.getBoard()));
-    this._currentGameState.setBoardGameScore(this.checkBoardForWins());
+    this._currentGameState.setBoard(this._onitamaCardBoardService.rotateBoard(this._currentGameState.getBoard()));
+    this._currentGameState.setBoardGameScore(this._onitamaCardBoardService.checkBoardForWins(this._currentGameState.getBoard(),
+      this.playingCurrentGameAs, this.getCurrentTurn()));
     if (this._currentGameState.getBoardGameScore() !== BoardGameScore.UNDETERMINED) {
       this.popSnackbarIfApplicable();
       this._gameOver = true;
@@ -353,7 +297,9 @@ export class OnitamaService {
               });
             }
           }
-          this._currentGameState = this._previousGameState;
+          if (this._previousGameState) {
+            this._currentGameState = this._previousGameState;
+          }
           this._loading = false;
         }
       }
@@ -405,63 +351,6 @@ export class OnitamaService {
         this._currentGameState.bluePlayerMovementCards.splice(replacementIndex, 1);
       }
     }
-  }
-
-  public rotateBoard(board: string[][]): string[][] {
-    let newBoard: string[][] = [];
-    for (let i = 0; i < board.length; i++) {
-      newBoard.push([...board[4-i].reverse()]);
-    }
-    return newBoard;
-  }
-
-  public checkBoardForWins(): BoardGameScore {
-    if (!this._currentGameState) {
-      return BoardGameScore.INVALID_BOARD;
-    }
-    let redMasterOnBoard: boolean = false;
-    let blueMasterOnBoard: boolean = false;
-    for (let i = 0; i < this.getCurrentBoard().length; i++) {
-      for(let j = 0; j < this.getCurrentBoard()[i].length; j++) {
-        if (this.getCurrentBoard()[i][j] === 'R') {
-          redMasterOnBoard = true;
-        }
-        if (this.getCurrentBoard()[i][j] === 'B') {
-          blueMasterOnBoard = true;
-        }
-      }
-    }
-    if (!redMasterOnBoard && !blueMasterOnBoard) {
-      return BoardGameScore.INVALID_BOARD;
-    }
-    if (!redMasterOnBoard && blueMasterOnBoard) {
-      return BoardGameScore.BLUE_WIN;
-    }
-    if (redMasterOnBoard && !blueMasterOnBoard) {
-      return BoardGameScore.RED_WIN;
-    }
-    if (this.playingCurrentGameAs !== this.getCurrentTurn()) {
-      if (this.playingCurrentGameAs.toUpperCase() === this.getCurrentBoard()[0][2]) {
-        return this.playingCurrentGameAs === 'r' ? BoardGameScore.RED_WIN : BoardGameScore.BLUE_WIN;
-      }
-      if (this.playingCurrentGameAs === 'r' && this.getCurrentBoard()[4][2] === 'B') {
-        return BoardGameScore.BLUE_WIN;
-      }
-      if (this.playingCurrentGameAs === 'b' && this.getCurrentBoard()[4][2] === 'R') {
-        return BoardGameScore.RED_WIN;
-      }
-    } else {
-      if (this.playingCurrentGameAs.toUpperCase() === this.getCurrentBoard()[4][2]) {
-        return this.playingCurrentGameAs === 'r' ? BoardGameScore.RED_WIN : BoardGameScore.BLUE_WIN;
-      }
-      if (this.playingCurrentGameAs === 'b' && this.getCurrentBoard()[4][2] === 'B') {
-        return BoardGameScore.BLUE_WIN;
-      }
-      if (this.playingCurrentGameAs === 'r' && this.getCurrentBoard()[4][2] === 'R') {
-        return BoardGameScore.RED_WIN;
-      }
-    }
-    return BoardGameScore.UNDETERMINED;
   }
 
   public popSnackbarIfApplicable(): void {

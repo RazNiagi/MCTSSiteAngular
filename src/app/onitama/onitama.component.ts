@@ -1,10 +1,10 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {OnitamaService} from './onitama.service';
-import {NewGameDialogComponent} from '../shared/new-game-dialog/new-game-dialog.component';
 import {OnitamaSettingsDialogComponent} from './onitama-settings-dialog/onitama-settings-dialog.component';
 import {OnitamaMovementCard} from '../model/onitama-movement-card';
 import {WidthHeight} from '../model/width-height';
+import {OnitamaNewGameDialogComponent} from './onitama-new-game-dialog/onitama-new-game-dialog.component';
 
 @Component({
   selector: 'app-onitama',
@@ -79,12 +79,16 @@ export class OnitamaComponent implements OnInit{
   }
 
   public openNewGameDialog(): void {
-    const dialogRef = this.dialog.open(NewGameDialogComponent);
+    const dialogRef = this.dialog.open(OnitamaNewGameDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this._onitamaService.botLevel = result;
-        this.resetBoard();
+        if (typeof result === 'number') {
+          this._onitamaService.botLevel = result;
+          this.resetBoard();
+        } else {
+          this._onitamaService.loadNewBoard(result);
+        }
       }
     })
   }

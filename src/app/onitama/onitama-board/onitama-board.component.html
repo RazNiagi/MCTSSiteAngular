@@ -1,7 +1,7 @@
 <table [ngStyle]="widthHeight">
   <tbody *ngIf="isCurrentlyPlayersTurn()">
   <tr *ngFor="let row of reverseRange5">
-    <td *ngFor="let col of reverseRange5" [ngClass]="getValidMoveClass(row, col)">
+    <td *ngFor="let col of reverseRange5" [ngClass]="getTableSquareClass(row, col)">
       <app-onitama-piece [piece]="getCurrentBoard()[row][col]"
                          [row]="row"
                          [col]="col"
@@ -13,7 +13,7 @@
   </tbody>
   <tbody *ngIf="!isCurrentlyPlayersTurn()">
   <tr *ngFor="let row of range5">
-    <td *ngFor="let col of range5" [ngClass]="getValidMoveClass(row, col)">
+    <td *ngFor="let col of range5" [ngClass]="getTableSquareClass(row, col)">
       <app-onitama-piece [piece]="getCurrentBoard()[row][col]"
                          [row]="row"
                          [col]="col"
