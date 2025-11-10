@@ -15,6 +15,7 @@ import {LevelErrorSnackbarComponent} from '../shared/level-error-snackbar/level-
 import {OnitamaMovementBias} from '../enums/onitama-movement-bias';
 import {OnitamaCardBoardService} from './onitama-card-board.service';
 import {OnitamaLoadGameDetails} from '../model/onitama-load-game-details';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +62,7 @@ export class OnitamaService {
     return this._botLevel;
   }
 
-  private API_BASE_URL: string = 'http://localhost:8080/onitama';
+  private API_BASE_URL: string = environment.BASE_URL + '/onitama';
   private _loading: boolean = false;
   private _botLevel: number = 1;
   private _gameOver: boolean = false;

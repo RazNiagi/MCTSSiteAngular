@@ -9,6 +9,7 @@ import {
   ConnectionErrorSnackbarComponent
 } from '../shared/connection-error-snackbar/connection-error-snackbar.component';
 import {LevelErrorSnackbarComponent} from '../shared/level-error-snackbar/level-error-snackbar.component';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class ConnectFourService {
     return this._botLevel;
   }
 
-  private API_BASE_URL: string = 'http://localhost:8080/connect-four';
+  private API_BASE_URL: string = environment.BASE_URL + '/connect-four';
   private static EMPTY_BOARD: string[][] = [
     ["-", "-", "-", "-", "-", "-", "-"],
     ["-", "-", "-", "-", "-", "-", "-"],
