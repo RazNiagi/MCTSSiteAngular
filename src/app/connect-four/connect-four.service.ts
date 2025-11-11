@@ -24,7 +24,7 @@ export class ConnectFourService {
     return this._botLevel;
   }
 
-  private API_BASE_URL: string = environment.BASE_URL + '/connect-four';
+  private API_BASE_URL: string = environment.BASE_URL + '/api/connect-four';
   private static EMPTY_BOARD: string[][] = [
     ["-", "-", "-", "-", "-", "-", "-"],
     ["-", "-", "-", "-", "-", "-", "-"],

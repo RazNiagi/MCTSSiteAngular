@@ -62,7 +62,7 @@ export class OnitamaService {
     return this._botLevel;
   }
 
-  private API_BASE_URL: string = environment.BASE_URL + '/onitama';
+  private API_BASE_URL: string = environment.BASE_URL + '/api/onitama';
   private _loading: boolean = false;
   private _botLevel: number = 1;
   private _gameOver: boolean = false;
