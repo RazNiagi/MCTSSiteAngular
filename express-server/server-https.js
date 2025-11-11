@@ -12,8 +12,19 @@ const privateKey = fs.readFileSync('./certs/server.key', 'utf8');
 const certificate = fs.readFileSync('./certs/server.crt', 'utf8');
 const credentials = { key: privateKey, cert: certificate };
 
+// Define the specific origin(s) you want to allow
+const allowedOrigin = ['https://jasonvaughn.dev', 'https://www.jasonvaughn.dev'];
+
+// Configure CORS options
+const corsOptions = {
+  origin: allowedOrigin, // Allow requests only from this specific origin
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Specify allowed HTTP methods
+  credentials: true, // Allow cookies to be sent with cross-origin requests
+  // Other options like allowedHeaders, exposedHeaders, maxAge can also be configured
+};
+
 // 🌐 Allow CORS (optional)
-app.use(cors());
+app.use(cors(corsOptions));
 
 // 🧭 Target backend server (change this to your real backend IP/port)
 const TARGET = 'http://localhost:8080';  // or https://... if it uses HTTPS
