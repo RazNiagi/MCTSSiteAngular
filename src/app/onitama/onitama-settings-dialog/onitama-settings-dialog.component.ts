@@ -94,6 +94,10 @@ export class OnitamaSettingsDialogComponent implements OnInit {
     return true;
   }
 
+  public isCardInDisabledList(cardName: string): boolean | null{
+    return this._onitamaService.disabledCards.includes(cardName) ? true : null;
+  }
+
   public updateCard(cardName: string, checked: boolean) {
     this.options.enabledCards.set(cardName, checked);
   }
@@ -123,6 +127,9 @@ export class OnitamaSettingsDialogComponent implements OnInit {
       .find(expansionCard => expansionCard.expansionName === expansion);
     if (expansionEnabler) {
       for (let card of expansionEnabler.cardList) {
+        if (this._onitamaService.disabledCards.includes(card.movementCard.name)) {
+          continue;
+        }
         card.enabled = checked;
       }
       expansionEnabler.partiallyEnabled = false;

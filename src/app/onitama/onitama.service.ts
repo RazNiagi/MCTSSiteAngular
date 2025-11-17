@@ -21,6 +21,13 @@ import {environment} from '../../environments/environment';
   providedIn: 'root'
 })
 export class OnitamaService {
+  get disabledCards(): string[] {
+    return this._disabledCards;
+  }
+  set disabledCards(value: string[]) {
+    this._disabledCards = value;
+  }
+
   get gameOver(): boolean {
     return this._gameOver;
   }
@@ -73,6 +80,8 @@ export class OnitamaService {
   private _selectedPiece: OnitamaMove = new OnitamaMove(-1, -1);
   private _playingCurrentGameAs: string = 'r';
   private _previousGameState: OnitamaGameState | undefined;
+  // These cards are disabled currently because they are split student and master moves which is not supported in the current implementation
+  private _disabledCards: string[] = ["Mejika", "Okija", "Kumo", "Sasori"];
 
   constructor(private _http: HttpClient, private _onitamaCardBoardService: OnitamaCardBoardService) { }
 
@@ -118,8 +127,8 @@ export class OnitamaService {
 
   public resetEnabledCards(): void {
     for (let card of this._onitamaCardBoardService.onitamaCards) {
-      this._enabledCards.set(card.name, true);
-      this.options.enabledCards.set(card.name, true);
+      this._enabledCards.set(card.name, !this._disabledCards.includes(card.name));
+      this.options.enabledCards.set(card.name, !this._disabledCards.includes(card.name));
     }
     this.saveOptionsToLocalStorage();
   }

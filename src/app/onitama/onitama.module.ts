@@ -32,7 +32,7 @@ import {OnitamaCardBoardService} from './onitama-card-board.service';
 @NgModule({
   declarations: [OnitamaComponent,
     OnitamaSettingsDialogComponent,
-      OnitamaMovementCardGridComponent,
+    OnitamaMovementCardGridComponent,
     OnitamaBoardComponent,
     OnitamaMovementCardComponent,
     OnitamaPieceComponent,
@@ -56,9 +56,9 @@ import {OnitamaCardBoardService} from './onitama-card-board.service';
   ],
   providers: [
     NavBarService,
-      OnitamaService,
+    OnitamaService,
     OnitamaCardBoardService,
-      provideHttpClient(),
+    provideHttpClient(),
   ]
 })
 export class OnitamaModule { }

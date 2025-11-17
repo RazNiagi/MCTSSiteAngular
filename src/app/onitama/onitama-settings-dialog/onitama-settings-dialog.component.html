@@ -17,6 +17,7 @@
             [ngStyle]="doesCardHaveStudentMasterMoves(card)"
             [ngClass]="getEnabledCardClass(card)">
           <mat-checkbox [checked]="card.enabled"
+                        [disabled]="isCardInDisabledList(card.movementCard.name)"
                         (change)="updateCardWithExpansion(expansionCards.expansionName, card.movementCard.name, $event.checked)" class="col-6">{{card.movementCard.name}}</mat-checkbox>
           <app-onitama-movement-card-grid [movementCard]="card.movementCard" class="col-6" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex" [ngStyle]=""></app-onitama-movement-card-grid>
         </li>
