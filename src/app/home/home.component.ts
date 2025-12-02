@@ -1,11 +1,6 @@
 import { Component } from '@angular/core';
 
-interface RouteInfo {
-  path: string;
-  label: string;
-  icon: string;
-  description: string;
-}
+import { RouteInfo } from '../model/route-info';
 
 @Component({
   selector: 'app-home',
