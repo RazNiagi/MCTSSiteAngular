@@ -13,6 +13,7 @@ interface RouteInfo {
   styleUrl: './home.component.scss'
 })
 export class HomeComponent {
+  // TODO: Change the onitama icon to a more relevant one
   routes: RouteInfo[] = [
     {
       path: '/connect-four',
