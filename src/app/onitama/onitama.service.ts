@@ -175,9 +175,11 @@ export class OnitamaService {
     this._currentGameState = new OnitamaGameState(newBoard, middleCard.stampColor, BoardGameScore.UNDETERMINED,
       bluePlayerCards, redPlayerCards, middleCard);
     this._gameOver = false;
-    if (shouldAutoStart && this.playingCurrentGameAs !== this.getCurrentTurn()) {
+    if (this.playingCurrentGameAs !== this.getCurrentTurn()) {
       this._currentGameState.setBoard(this._onitamaCardBoardService.rotateBoard(this.getCurrentBoard()));
-      this.retrieveMove();
+      if (shouldAutoStart) {
+        this.retrieveMove();
+      }
     }
   }
 
