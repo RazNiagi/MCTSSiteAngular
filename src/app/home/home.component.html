@@ -17,7 +17,7 @@
               <p>{{route.description}}</p>
             </mat-card-content>
             <mat-card-actions align="end">
-              <button mat-fab extended [routerLink]="route.path" color="primary">
+              <button mat-fab extended [routerLink]="route.path" color="primary" [attr.aria-label]="'Play ' + route.label">
                 <mat-icon>play_arrow</mat-icon>
                 Play
               </button>
