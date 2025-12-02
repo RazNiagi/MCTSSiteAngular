@@ -1,1 +1,31 @@
-<p>home works!</p>
+<div class="container-fluid home-container">
+  <div class="row" style="height: 100%">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <div class="content-wrapper">
+<!--    TODO: Figure out a better welcome title as this one feels off    -->
+        <h1 class="title">Welcome to MCTS Game Center</h1>
+        <p class="subtitle">Choose a game to play against an AI opponent</p>
+
+        <div class="games-grid">
+          <mat-card *ngFor="let route of routes" class="game-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>{{route.icon}}</mat-icon>
+              <mat-card-title>{{route.label}}</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{route.description}}</p>
+            </mat-card-content>
+            <mat-card-actions align="end">
+              <button mat-fab extended [routerLink]="route.path" color="primary">
+                <mat-icon>play_arrow</mat-icon>
+                Play
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+</div>
