@@ -11,10 +11,11 @@ import {OnitamaNewGameDialogComponent} from './onitama-new-game-dialog/onitama-n
   templateUrl: './onitama.component.html',
   styleUrl: './onitama.component.scss'
 })
-export class OnitamaComponent implements OnInit{
+export class OnitamaComponent implements OnInit {
   readonly dialog = inject(MatDialog);
   public onitamaBoardDimensions = new WidthHeight('500px', '500px');
   public movementCardDimensions: WidthHeight = new WidthHeight('160px', '90px');
+  private _isInitialLoad = true;
 
   constructor(private _onitamaService: OnitamaService) {
   }
@@ -26,11 +27,12 @@ export class OnitamaComponent implements OnInit{
   public ngOnInit(): void {
     this._onitamaService.init();
     this.resetBoard();
+    this._isInitialLoad = false;
     this.onResize();
   }
 
   public resetBoard(): void {
-    this._onitamaService.resetBoard();
+    this._onitamaService.resetBoard(!this._isInitialLoad);
   }
 
   public openSettingsDialog(): void {

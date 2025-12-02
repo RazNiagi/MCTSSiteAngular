@@ -2,7 +2,6 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {OnitamaGameState} from '../model/onitama-game-state';
-// import onitamaCards from './onitama-cards.json';
 import {OnitamaMovementCard} from '../model/onitama-movement-card';
 import {BoardGameScore} from '../enums/board-game-score';
 import {OnitamaOptions} from '../model/onitama-options';
@@ -137,13 +136,13 @@ export class OnitamaService {
     return this._loading;
   }
 
-  public resetBoard(): void {
+  public resetBoard(shouldAutoStart: boolean = true): void {
     this.setEnabledCards();
     this.setColorPlayingAs();
-    this.generateNewBoardFromEnabledCards();
+    this.generateNewBoardFromEnabledCards(shouldAutoStart);
   }
 
-  public generateNewBoardFromEnabledCards(): void {
+  public generateNewBoardFromEnabledCards(shouldAutoStart: boolean = true): void {
     let cardsEnabled = this._onitamaCardBoardService.getAllCards();
     for (let [cardName, enabled] of this._enabledCards) {
       if (!enabled) {
@@ -176,7 +175,7 @@ export class OnitamaService {
     this._currentGameState = new OnitamaGameState(newBoard, middleCard.stampColor, BoardGameScore.UNDETERMINED,
       bluePlayerCards, redPlayerCards, middleCard);
     this._gameOver = false;
-    if (this.playingCurrentGameAs !== this.getCurrentTurn()) {
+    if (shouldAutoStart && this.playingCurrentGameAs !== this.getCurrentTurn()) {
       this._currentGameState.setBoard(this._onitamaCardBoardService.rotateBoard(this.getCurrentBoard()));
       this.retrieveMove();
     }
