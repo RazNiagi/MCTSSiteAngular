@@ -1,0 +1,27 @@
+<div class="quarto-container">
+  <div class="board-section">
+    <div class="board">
+      <div class="board-row" *ngFor="let row of getCurrentBoard(); let i = index">
+        <div class="board-cell"
+             *ngFor="let cell of row; let j = index"
+             (click)="onCellClick(i, j)"
+             [class.clickable]="isPieceSelected() && cell === '-'">
+          <app-quarto-piece [piece]="cell"></app-quarto-piece>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pieces-section">
+    <h3>Available Pieces</h3>
+    <div class="pieces-grid">
+      <div class="piece-slot"
+           *ngFor="let piece of getAvailablePieces()"
+           (click)="onPieceSelect(piece)"
+           [class.selected]="piece === getSelectedPiece()"
+           [class.clickable]="!isPieceSelected() && isMyTurn()">
+        <app-quarto-piece [piece]="piece" [clickable]="!isPieceSelected() && isMyTurn()"></app-quarto-piece>
+      </div>
+    </div>
+  </div>
+</div>

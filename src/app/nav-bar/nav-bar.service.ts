@@ -23,6 +23,10 @@ export class NavBarService {
       {
         path: 'onitama',
         label: 'Onitama',
+      },
+      {
+        path: 'quarto',
+        label: 'Quarto',
       }
     ];
   }

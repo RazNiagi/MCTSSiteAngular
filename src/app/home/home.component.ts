@@ -21,6 +21,12 @@ export class HomeComponent {
       label: 'Onitama',
       icon: 'sports_esports',
       description: 'Play Onitama against an AI opponent'
+    },
+    {
+      path: '/quarto',
+      label: 'Quarto',
+      icon: 'extension',
+      description: 'Play Quarto against an AI opponent'
     }
   ];
 }

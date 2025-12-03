@@ -1,0 +1,13 @@
+<div class="piece-container" *ngIf="!isEmpty()"
+     [class.clickable]="clickable"
+     [class.brown]="getPieceAttributes().brown"
+     [class.tan]="!getPieceAttributes().brown"
+     [class.tall]="getPieceAttributes().tall"
+     [class.short]="!getPieceAttributes().tall">
+  <div class="piece-shape"
+       [class.circle]="!getPieceAttributes().square"
+       [class.square]="getPieceAttributes().square"
+       [class.full]="getPieceAttributes().full"
+       [class.hollow]="!getPieceAttributes().full">
+  </div>
+</div>

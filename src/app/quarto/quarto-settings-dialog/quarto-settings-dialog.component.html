@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Quarto Settings</h2>
+<mat-dialog-content>
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    <mat-form-field>
+      <mat-label>Bot Level</mat-label>
+      <mat-select [(ngModel)]="options.botLevel" required>
+        <mat-option [value]="level" *ngFor="let level of botLevels">{{level}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="options.playFirst">
+      Play First
+    </mat-checkbox>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button (click)="onSaveClick()">Save</button>
+</mat-dialog-actions>
