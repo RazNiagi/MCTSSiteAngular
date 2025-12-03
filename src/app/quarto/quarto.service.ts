@@ -50,6 +50,25 @@ export class QuartoService {
     return this._currentGameState.availablePieces;
   }
 
+  public getAllPieceSlots(): string[] {
+    const allPieces = [...QuartoService.ALL_PIECES];
+    const usedPieces = new Set<string>();
+    
+    for (let row of this._currentGameState.getBoard()) {
+      for (let cell of row) {
+        if (cell !== '-') {
+          usedPieces.add(cell);
+        }
+      }
+    }
+    
+    if (this._currentGameState.selectedPiece !== '') {
+      usedPieces.add(this._currentGameState.selectedPiece);
+    }
+    
+    return allPieces.map(piece => usedPieces.has(piece) ? '-' : piece);
+  }
+
   public getSelectedPiece(): string {
     return this._currentGameState.selectedPiece;
   }
@@ -97,17 +116,22 @@ export class QuartoService {
     this._playingAs = this._options.playFirst ? 'r' : 'b';
 
     if (!this._options.playFirst) {
-      this.retrieveBotMove();
+      this.retrieveBotPieceSelection();
     } else {
       this._loading = false;
     }
   }
 
-  public selectPiece(piece: string): void {
+  public selectPieceForOpponent(piece: string): void {
     if (this._loading || this._gameOver || this._currentGameState.selectedPiece !== '') {
       return;
     }
+    
     this._currentGameState.selectedPiece = piece;
+    this._currentGameState.availablePieces = this._currentGameState.availablePieces.filter(p => p !== piece);
+    this._currentGameState.switchTurn();
+    
+    this.retrieveBotPlacement();
   }
 
   public placePiece(row: number, col: number): void {
@@ -116,11 +140,7 @@ export class QuartoService {
       return;
     }
 
-    this._loading = true;
     this._currentGameState.getBoard()[row][col] = this._currentGameState.selectedPiece;
-    this._currentGameState.availablePieces = this._currentGameState.availablePieces.filter(
-      p => p !== this._currentGameState.selectedPiece
-    );
     this._currentGameState.selectedPiece = '';
 
     const score = this.evaluateBoardForWin();
@@ -128,26 +148,69 @@ export class QuartoService {
       this._currentGameState.setBoardGameScore(score);
       this.popSnackbarIfApplicable();
       this._gameOver = true;
-      this._loading = false;
+      return;
+    }
+
+    if (this._currentGameState.availablePieces.length === 0) {
+      this._currentGameState.setBoardGameScore(BoardGameScore.TIE);
+      this.popSnackbarIfApplicable();
+      this._gameOver = true;
       return;
     }
 
     this._currentGameState.switchTurn();
-    this.retrieveBotMove();
+    this.retrieveBotPieceSelection();
   }
 
-  private retrieveBotMove(): void {
+  private retrieveBotPieceSelection(): void {
     this._loading = true;
     const dto = new QuartoGameStateDto(this._currentGameState, this._options.botLevel);
 
-    this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/make-move', dto).subscribe({
+    this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/select-piece', dto).subscribe({
+      next: data => {
+        this._currentGameState = Object.assign(this._currentGameState, data);
+        this._loading = false;
+      },
+      error: error => {
+        console.error(error);
+        if (error.status === 0) {
+          this._snackbar.openFromComponent(ConnectionErrorSnackbarComponent, {
+            duration: 3000
+          });
+        }
+        if (error.status === 400 && error.error === 'Level must be between 1 and 10') {
+          this._snackbar.openFromComponent(LevelErrorSnackbarComponent, {
+            duration: 3000
+          });
+        }
+        this._loading = false;
+      }
+    });
+  }
+
+  private retrieveBotPlacement(): void {
+    this._loading = true;
+    const dto = new QuartoGameStateDto(this._currentGameState, this._options.botLevel);
+
+    this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/place-piece', dto).subscribe({
       next: data => {
         this._currentGameState = Object.assign(this._currentGameState, data);
 
         if (this._currentGameState.getBoardGameScore() !== BoardGameScore.UNDETERMINED) {
           this.popSnackbarIfApplicable();
           this._gameOver = true;
+          this._loading = false;
+          return;
         }
+
+        if (this._currentGameState.availablePieces.length === 0) {
+          this._currentGameState.setBoardGameScore(BoardGameScore.TIE);
+          this.popSnackbarIfApplicable();
+          this._gameOver = true;
+          this._loading = false;
+          return;
+        }
+
         this._loading = false;
       },
       error: error => {

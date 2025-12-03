@@ -33,26 +33,24 @@
   &.square {
     border-radius: 5%;
   }
+}
 
-  &.full {
-    &.brown {
-      background-color: #8B4513;
-    }
-    &.tan {
-      background-color: #D2B48C;
-    }
-  }
+.brown .piece-shape.full {
+  background-color: #8B4513;
+}
 
-  &.hollow {
-    &.brown {
-      background-color: transparent;
-      border: 3px solid #8B4513;
-    }
-    &.tan {
-      background-color: transparent;
-      border: 3px solid #D2B48C;
-    }
-  }
+.tan .piece-shape.full {
+  background-color: #D2B48C;
+}
+
+.brown .piece-shape.hollow {
+  background-color: transparent;
+  border: 3px solid #8B4513;
+}
+
+.tan .piece-shape.hollow {
+  background-color: transparent;
+  border: 3px solid #D2B48C;
 }
 
 .tall .piece-shape {

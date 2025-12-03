@@ -17,16 +17,24 @@ export class QuartoBoardComponent {
     return this._quartoService.getAvailablePieces();
   }
 
+  public getAllPieceSlots(): string[] {
+    return this._quartoService.getAllPieceSlots();
+  }
+
   public getSelectedPiece(): string {
     return this._quartoService.getSelectedPiece();
   }
 
   public onPieceSelect(piece: string): void {
-    this._quartoService.selectPiece(piece);
+    if (!this.isPieceSelected() && this.isMyTurn()) {
+      this._quartoService.selectPieceForOpponent(piece);
+    }
   }
 
   public onCellClick(row: number, col: number): void {
-    this._quartoService.placePiece(row, col);
+    if (this.isPieceSelected() && this.isMyTurn()) {
+      this._quartoService.placePiece(row, col);
+    }
   }
 
   public isMyTurn(): boolean {
