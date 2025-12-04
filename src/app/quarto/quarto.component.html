@@ -1,19 +1,15 @@
 <div class="container-fluid" id="quarto-container">
   <div class="row" style="height: 10%">
-    <div class="col-3"></div>
-    <div class="col-3" style="justify-items: center; align-items: center; justify-content: center; display: flex">
+    <div class="col-5"></div>
+    <div class="col-2" style="justify-items: center; align-items: center; justify-content: center; display: flex">
       <mat-chip [disabled]="true">Bot Level: {{getBotLevel()}}</mat-chip>
     </div>
-    <div class="col-3" style="justify-items: center; align-items: center; justify-content: center; display: flex">
-      <mat-chip [disabled]="true">Playing {{getPlayFirst() ? 'First' : 'Second'}}</mat-chip>
-    </div>
-    <div class="col-2" style="justify-items: center; align-items: center; justify-content: center; display: flex">
+    <div class="col-3"></div>
+    <div class="col-1" style="justify-items: center; align-items: center; justify-content: center; display: flex">
       <mat-spinner *ngIf="isLoading()" style="height: 50%; width: 50%;"></mat-spinner>
     </div>
     <div class="col-1" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex">
-      <button mat-icon-button (click)="openSettingsDialog()">
-        <mat-icon>settings</mat-icon>
-      </button>
+      <button mat-fab extended (click)="openSettingsDialog()"><mat-icon>settings</mat-icon>Settings</button>
     </div>
   </div>
   <div class="row" style="height: 80%">
@@ -22,11 +18,13 @@
     </div>
   </div>
   <div class="row" style="height: 10%">
-    <div class="col-2 offset-5" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex">
+    <div class="col-5"></div>
+    <div class="col-2" style="text-align: center; justify-content: center; align-items: center; height: 100%; display: flex">
       <button mat-fab extended (click)="resetBoard()">
         <mat-icon>add</mat-icon>
         New Game
       </button>
     </div>
+    <div class="col-5"></div>
   </div>
 </div>

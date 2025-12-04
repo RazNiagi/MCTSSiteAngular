@@ -116,10 +116,19 @@ export class QuartoService {
     this._playingAs = this._options.playFirst ? 'r' : 'b';
 
     if (!this._options.playFirst) {
-      this.retrieveBotPieceSelection();
+      this.selectRandomFirstPiece();
     } else {
       this._loading = false;
     }
+  }
+
+  private selectRandomFirstPiece(): void {
+    const randomIndex = Math.floor(Math.random() * this._currentGameState.availablePieces.length);
+    const randomPiece = this._currentGameState.availablePieces[randomIndex];
+    this._currentGameState.selectedPiece = randomPiece;
+    this._currentGameState.availablePieces = this._currentGameState.availablePieces.filter(p => p !== randomPiece);
+    this._currentGameState.switchTurn();
+    this._loading = false;
   }
 
   public selectPieceForOpponent(piece: string): void {
@@ -129,9 +138,8 @@ export class QuartoService {
     
     this._currentGameState.selectedPiece = piece;
     this._currentGameState.availablePieces = this._currentGameState.availablePieces.filter(p => p !== piece);
-    this._currentGameState.switchTurn();
     
-    this.retrieveBotPlacement();
+    this.retrieveBotMove();
   }
 
   public placePiece(row: number, col: number): void {
@@ -157,42 +165,15 @@ export class QuartoService {
       this._gameOver = true;
       return;
     }
-
-    this._currentGameState.switchTurn();
-    this.retrieveBotPieceSelection();
   }
 
-  private retrieveBotPieceSelection(): void {
+
+
+  private retrieveBotMove(): void {
     this._loading = true;
     const dto = new QuartoGameStateDto(this._currentGameState, this._options.botLevel);
 
-    this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/select-piece', dto).subscribe({
-      next: data => {
-        this._currentGameState = Object.assign(this._currentGameState, data);
-        this._loading = false;
-      },
-      error: error => {
-        console.error(error);
-        if (error.status === 0) {
-          this._snackbar.openFromComponent(ConnectionErrorSnackbarComponent, {
-            duration: 3000
-          });
-        }
-        if (error.status === 400 && error.error === 'Level must be between 1 and 10') {
-          this._snackbar.openFromComponent(LevelErrorSnackbarComponent, {
-            duration: 3000
-          });
-        }
-        this._loading = false;
-      }
-    });
-  }
-
-  private retrieveBotPlacement(): void {
-    this._loading = true;
-    const dto = new QuartoGameStateDto(this._currentGameState, this._options.botLevel);
-
-    this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/place-piece', dto).subscribe({
+    this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/make-move', dto).subscribe({
       next: data => {
         this._currentGameState = Object.assign(this._currentGameState, data);
 
