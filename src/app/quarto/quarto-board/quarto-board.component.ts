@@ -26,21 +26,23 @@ export class QuartoBoardComponent {
   }
 
   public onPieceSelect(piece: string): void {
-    if (!this.isPieceSelected() && this.isMyTurn()) {
+    if (!this.isPieceSelected() && this.isPlayerTurn() && !this.isLoading()) {
       this._quartoService.selectPieceForOpponent(piece);
     }
   }
 
   public onCellClick(row: number, col: number): void {
-    if (this.isPieceSelected() && this.isMyTurn()) {
+    if (this.isPieceSelected() && this.isPlayerTurn() && !this.isLoading()) {
       this._quartoService.placePiece(row, col);
     }
   }
 
-  public isMyTurn(): boolean {
-    const playFirst = this._quartoService.getPlayFirst();
-    const currentTurn = this._quartoService.getCurrentTurn();
-    return (playFirst && currentTurn === 'r') || (!playFirst && currentTurn === 'b');
+  public isLoading(): boolean {
+    return this._quartoService.isLoading();
+  }
+
+  public isPlayerTurn(): boolean {
+    return this._quartoService.getCurrentTurn() === '1';
   }
 
   public isPieceSelected(): boolean {

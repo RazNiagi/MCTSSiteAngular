@@ -12,6 +12,6 @@ export class QuartoGameState extends BaseGameState {
   }
 
   public switchTurn(): void {
-    this.setCurrentTurn(this.getCurrentTurn() === 'r' ? 'b' : 'r');
+    this.setCurrentTurn(this.getCurrentTurn() === '1' ? '2' : '1');
   }
 }

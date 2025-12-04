@@ -5,7 +5,7 @@
         <div class="board-cell"
              *ngFor="let cell of row; let j = index"
              (click)="onCellClick(i, j)"
-             [class.clickable]="isPieceSelected() && isMyTurn() && cell === '-'">
+             [class.clickable]="isPieceSelected() && isPlayerTurn() && !isLoading() && cell === '-'">
           <app-quarto-piece [piece]="cell"></app-quarto-piece>
         </div>
       </div>
@@ -26,9 +26,9 @@
       <div class="piece-slot"
            *ngFor="let piece of getAllPieceSlots()"
            (click)="onPieceSelect(piece)"
-           [class.clickable]="piece !== '-' && !isPieceSelected() && isMyTurn()"
+           [class.clickable]="piece !== '-' && !isPieceSelected() && isPlayerTurn() && !isLoading()"
            [class.empty]="piece === '-'">
-        <app-quarto-piece [piece]="piece" [clickable]="piece !== '-' && !isPieceSelected() && isMyTurn()"></app-quarto-piece>
+        <app-quarto-piece [piece]="piece" [clickable]="piece !== '-' && !isPieceSelected() && isPlayerTurn() && !isLoading()"></app-quarto-piece>
       </div>
     </div>
   </div>

@@ -27,7 +27,6 @@ export class QuartoService {
   private _gameOver: boolean = false;
   private _currentGameState: QuartoGameState;
   private _options: QuartoOptions = new QuartoOptions(true, 1);
-  private _playingAs: string = 'r';
 
   constructor(private _httpClient: HttpClient) {
     this._currentGameState = new QuartoGameState(this.getEmptyBoard(), 'r', [...QuartoService.ALL_PIECES]);
@@ -53,7 +52,7 @@ export class QuartoService {
   public getAllPieceSlots(): string[] {
     const allPieces = [...QuartoService.ALL_PIECES];
     const usedPieces = new Set<string>();
-    
+
     for (let row of this._currentGameState.getBoard()) {
       for (let cell of row) {
         if (cell !== '-') {
@@ -61,11 +60,11 @@ export class QuartoService {
         }
       }
     }
-    
+
     if (this._currentGameState.selectedPiece !== '') {
       usedPieces.add(this._currentGameState.selectedPiece);
     }
-    
+
     return allPieces.map(piece => usedPieces.has(piece) ? '-' : piece);
   }
 
@@ -113,7 +112,6 @@ export class QuartoService {
     this._loading = true;
     this._currentGameState = new QuartoGameState(this.getEmptyBoard(), 'r', [...QuartoService.ALL_PIECES]);
     this._gameOver = false;
-    this._playingAs = this._options.playFirst ? 'r' : 'b';
 
     if (!this._options.playFirst) {
       this.selectRandomFirstPiece();
@@ -135,10 +133,11 @@ export class QuartoService {
     if (this._loading || this._gameOver || this._currentGameState.selectedPiece !== '') {
       return;
     }
-    
+
     this._currentGameState.selectedPiece = piece;
     this._currentGameState.availablePieces = this._currentGameState.availablePieces.filter(p => p !== piece);
-    
+    this._currentGameState.switchTurn();
+
     this.retrieveBotMove();
   }
 
@@ -217,23 +216,23 @@ export class QuartoService {
     // Check rows
     for (let i = 0; i < 4; i++) {
       if (this.checkLine([board[i][0], board[i][1], board[i][2], board[i][3]])) {
-        return BoardGameScore.RED_WIN;
+        return BoardGameScore.PLAYER_1_WIN;
       }
     }
 
     // Check columns
     for (let i = 0; i < 4; i++) {
       if (this.checkLine([board[0][i], board[1][i], board[2][i], board[3][i]])) {
-        return BoardGameScore.RED_WIN;
+        return BoardGameScore.PLAYER_1_WIN;
       }
     }
 
     // Check diagonals
     if (this.checkLine([board[0][0], board[1][1], board[2][2], board[3][3]])) {
-      return BoardGameScore.RED_WIN;
+      return BoardGameScore.PLAYER_1_WIN;
     }
     if (this.checkLine([board[0][3], board[1][2], board[2][1], board[3][0]])) {
-      return BoardGameScore.RED_WIN;
+      return BoardGameScore.PLAYER_1_WIN;
     }
 
     // Check for tie (board full)
@@ -263,12 +262,12 @@ export class QuartoService {
 
   private popSnackbarIfApplicable(): void {
     switch (this._currentGameState.getBoardGameScore()) {
-      case BoardGameScore.RED_WIN:
+      case BoardGameScore.PLAYER_1_WIN:
         this._snackbar.open('You win!', 'Ok', {
           duration: 3000
         });
         break;
-      case BoardGameScore.BLUE_WIN:
+      case BoardGameScore.PLAYER_2_WIN:
         this._snackbar.open('Bot wins!', 'Ok', {
           duration: 3000
         });
