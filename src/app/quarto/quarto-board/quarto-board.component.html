@@ -13,10 +13,11 @@
   </div>
 
   <div class="pieces-section">
-    <div class="selected-piece-section" *ngIf="isPieceSelected()">
+    <div class="selected-piece-section">
       <h3>Piece to Place</h3>
-      <div class="selected-piece-display">
-        <app-quarto-piece [piece]="getSelectedPiece()"></app-quarto-piece>
+      <div class="selected-piece-display" [class.empty]="!isPieceSelected()">
+        <app-quarto-piece *ngIf="isPieceSelected()" [piece]="getSelectedPiece()"></app-quarto-piece>
+        <span *ngIf="!isPieceSelected()" class="empty-message">No piece selected</span>
       </div>
     </div>
 

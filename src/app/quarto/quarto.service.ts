@@ -268,11 +268,11 @@ export class QuartoService {
       return false;
     }
 
-    // Check each attribute (bits 0-3 of the character code)
+    // Check each attribute (bits 0-3 of the value minus 'A')
     for (let bit = 0; bit < 4; bit++) {
       const mask = 1 << bit;
-      const firstBit = (pieces[0].charCodeAt(0) & mask) !== 0;
-      if (pieces.every(p => ((p.charCodeAt(0) & mask) !== 0) === firstBit)) {
+      const firstBit = ((pieces[0].charCodeAt(0) - 65) & mask) !== 0;
+      if (pieces.every(p => (((p.charCodeAt(0) - 65) & mask) !== 0) === firstBit)) {
         return true;
       }
     }
@@ -304,12 +304,12 @@ export class QuartoService {
     if (piece === '-') {
       return { brown: false, tall: false, square: false, full: false };
     }
-    const code = piece.charCodeAt(0);
+    const value = piece.charCodeAt(0) - 65;
     return {
-      brown: (code & 1) !== 0,
-      tall: (code & 2) !== 0,
-      square: (code & 4) !== 0,
-      full: (code & 8) !== 0
+      brown: (value & 1) !== 0,
+      tall: (value & 2) !== 0,
+      square: (value & 4) !== 0,
+      full: (value & 8) !== 0
     };
   }
 }
