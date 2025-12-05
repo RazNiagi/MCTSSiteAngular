@@ -148,6 +148,7 @@ export class QuartoService {
     this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/place-piece', dto).subscribe({
       next: data => {
         this._currentGameState = Object.assign(this._currentGameState, data);
+        console.log(this._currentGameState);
 
         if (this._currentGameState.getBoardGameScore() !== BoardGameScore.UNDETERMINED) {
           this.popSnackbarIfApplicable();
@@ -210,27 +211,39 @@ export class QuartoService {
 
   private evaluateBoardForWin(): BoardGameScore {
     const board = this._currentGameState.getBoard();
+    let hasWin = false;
 
     // Check rows
     for (let i = 0; i < 4; i++) {
       if (this.checkLine([board[i][0], board[i][1], board[i][2], board[i][3]])) {
-        return BoardGameScore.PLAYER_1_WIN;
+        hasWin = true;
+        break;
       }
     }
 
     // Check columns
-    for (let i = 0; i < 4; i++) {
-      if (this.checkLine([board[0][i], board[1][i], board[2][i], board[3][i]])) {
-        return BoardGameScore.PLAYER_1_WIN;
+    if (!hasWin) {
+      for (let i = 0; i < 4; i++) {
+        if (this.checkLine([board[0][i], board[1][i], board[2][i], board[3][i]])) {
+          hasWin = true;
+          break;
+        }
       }
     }
 
     // Check diagonals
-    if (this.checkLine([board[0][0], board[1][1], board[2][2], board[3][3]])) {
-      return BoardGameScore.PLAYER_1_WIN;
+    if (!hasWin) {
+      if (this.checkLine([board[0][0], board[1][1], board[2][2], board[3][3]])) {
+        hasWin = true;
+      } else if (this.checkLine([board[0][3], board[1][2], board[2][1], board[3][0]])) {
+        hasWin = true;
+      }
     }
-    if (this.checkLine([board[0][3], board[1][2], board[2][1], board[3][0]])) {
-      return BoardGameScore.PLAYER_1_WIN;
+
+    if (hasWin) {
+      // In Quarto, the player who placed the piece that created the winning line wins
+      // Since we just placed, the current turn is the winner
+      return this._currentGameState.getCurrentTurn() === '1' ? BoardGameScore.PLAYER_1_WIN : BoardGameScore.PLAYER_2_WIN;
     }
 
     // Check for tie (board full)
@@ -246,13 +259,15 @@ export class QuartoService {
       return false;
     }
 
-    // Check each attribute (bits 0-3 of the value minus 'A')
-    for (let bit = 0; bit < 4; bit++) {
-      const mask = 1 << bit;
-      const firstBit = ((pieces[0].charCodeAt(0) - 65) & mask) !== 0;
-      if (pieces.every(p => (((p.charCodeAt(0) - 65) & mask) !== 0) === firstBit)) {
-        return true;
-      }
+    let tempPieces = pieces.map(p => (p.charCodeAt(0) - 65) & 0b1111);
+    tempPieces.forEach(p => p = p & 0b1111); // Keep only the last 4 bits
+
+    if ((tempPieces[0] & tempPieces[1] & tempPieces[2] & tempPieces[3]) !== 0) {
+      return true;
+    }
+    tempPieces.forEach(p => p = (~p) & 0b1111); // Invert bits
+    if ((tempPieces[0] & tempPieces[1] & tempPieces[2] & tempPieces[3]) !== 0) {
+      return true;
     }
 
     return false;
