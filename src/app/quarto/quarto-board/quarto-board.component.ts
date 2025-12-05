@@ -26,9 +26,13 @@ export class QuartoBoardComponent {
   }
 
   public onPieceSelect(piece: string): void {
-    if (!this.isPieceSelected() && this.isPlayerTurn() && !this.isLoading()) {
+    if (!this.isPieceSelected() && this.isPlayerTurn() && !this.isLoading() && !this.isGameOver()) {
       this._quartoService.selectPieceForOpponent(piece);
     }
+  }
+
+  public isGameOver(): boolean {
+    return this._quartoService.isGameOver();
   }
 
   public onCellClick(row: number, col: number): void {

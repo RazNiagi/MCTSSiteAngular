@@ -26,9 +26,9 @@
       <div class="piece-slot"
            *ngFor="let piece of getAllPieceSlots()"
            (click)="onPieceSelect(piece)"
-           [class.clickable]="piece !== '-' && !isPieceSelected() && isPlayerTurn() && !isLoading()"
+           [class.clickable]="piece !== '-' && !isPieceSelected() && isPlayerTurn() && !isLoading() && !isGameOver()"
            [class.empty]="piece === '-'">
-        <app-quarto-piece [piece]="piece" [clickable]="piece !== '-' && !isPieceSelected() && isPlayerTurn() && !isLoading()"></app-quarto-piece>
+        <app-quarto-piece [piece]="piece" [clickable]="piece !== '-' && !isPieceSelected() && isPlayerTurn() && !isLoading() && !isGameOver()"></app-quarto-piece>
       </div>
     </div>
   </div>

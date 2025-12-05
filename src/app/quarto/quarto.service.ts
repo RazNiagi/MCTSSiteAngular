@@ -138,41 +138,14 @@ export class QuartoService {
     this._currentGameState.availablePieces = this._currentGameState.availablePieces.filter(p => p !== piece);
     this._currentGameState.switchTurn();
 
-    this.retrieveBotMove();
+    this.retrieveBotPlacement();
   }
 
-  public placePiece(row: number, col: number): void {
-    if (this._loading || this._gameOver || this._currentGameState.selectedPiece === '' ||
-        this._currentGameState.getBoard()[row][col] !== '-') {
-      return;
-    }
-
-    this._currentGameState.getBoard()[row][col] = this._currentGameState.selectedPiece;
-    this._currentGameState.selectedPiece = '';
-
-    const score = this.evaluateBoardForWin();
-    if (score !== BoardGameScore.UNDETERMINED) {
-      this._currentGameState.setBoardGameScore(score);
-      this.popSnackbarIfApplicable();
-      this._gameOver = true;
-      return;
-    }
-
-    if (this._currentGameState.availablePieces.length === 0) {
-      this._currentGameState.setBoardGameScore(BoardGameScore.TIE);
-      this.popSnackbarIfApplicable();
-      this._gameOver = true;
-      return;
-    }
-  }
-
-
-
-  private retrieveBotMove(): void {
+  private retrieveBotPlacement(): void {
     this._loading = true;
     const dto = new QuartoGameStateDto(this._currentGameState, this._options.botLevel);
 
-    this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/make-move', dto).subscribe({
+    this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/place-piece', dto).subscribe({
       next: data => {
         this._currentGameState = Object.assign(this._currentGameState, data);
 
@@ -208,6 +181,31 @@ export class QuartoService {
         this._loading = false;
       }
     });
+  }
+
+  public placePiece(row: number, col: number): void {
+    if (this._loading || this._gameOver || this._currentGameState.selectedPiece === '' ||
+        this._currentGameState.getBoard()[row][col] !== '-') {
+      return;
+    }
+
+    this._currentGameState.getBoard()[row][col] = this._currentGameState.selectedPiece;
+    this._currentGameState.selectedPiece = '';
+
+    const score = this.evaluateBoardForWin();
+    if (score !== BoardGameScore.UNDETERMINED) {
+      this._currentGameState.setBoardGameScore(score);
+      this.popSnackbarIfApplicable();
+      this._gameOver = true;
+      return;
+    }
+
+    if (this._currentGameState.availablePieces.length === 0) {
+      this._currentGameState.setBoardGameScore(BoardGameScore.TIE);
+      this.popSnackbarIfApplicable();
+      this._gameOver = true;
+      return;
+    }
   }
 
   private evaluateBoardForWin(): BoardGameScore {
