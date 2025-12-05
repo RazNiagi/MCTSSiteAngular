@@ -29,7 +29,7 @@ export class QuartoService {
   private _options: QuartoOptions = new QuartoOptions(true, 1);
 
   constructor(private _httpClient: HttpClient) {
-    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), 'r', [...QuartoService.ALL_PIECES]);
+    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES]);
     this.loadOptionsFromSessionStorage();
   }
 
@@ -110,7 +110,7 @@ export class QuartoService {
 
   public resetBoard(): void {
     this._loading = true;
-    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), 'r', [...QuartoService.ALL_PIECES]);
+    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES]);
     this._gameOver = false;
 
     if (!this._options.playFirst) {
@@ -148,7 +148,6 @@ export class QuartoService {
     this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/place-piece', dto).subscribe({
       next: data => {
         this._currentGameState = Object.assign(this._currentGameState, data);
-        console.log(this._currentGameState);
 
         if (this._currentGameState.getBoardGameScore() !== BoardGameScore.UNDETERMINED) {
           this.popSnackbarIfApplicable();

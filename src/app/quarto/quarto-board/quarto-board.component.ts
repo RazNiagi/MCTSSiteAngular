@@ -46,7 +46,14 @@ export class QuartoBoardComponent {
   }
 
   public isPlayerTurn(): boolean {
-    return this._quartoService.getCurrentTurn() === '1';
+    const playFirst = this._quartoService.getPlayFirst();
+    const currentTurn = this._quartoService.getCurrentTurn();
+    // If playing first, player is '1', otherwise player is '2'
+    return (playFirst && currentTurn === '1') || (!playFirst && currentTurn === '2');
+  }
+
+  public getPlayFirst(): boolean {
+    return this._quartoService.getPlayFirst();
   }
 
   public isPieceSelected(): boolean {
