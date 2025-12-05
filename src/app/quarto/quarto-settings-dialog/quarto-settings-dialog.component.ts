@@ -23,7 +23,7 @@ export class QuartoSettingsDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public onSaveClick(): void {
+  public onPlayClick(): void {
     this.dialogRef.close(this.options);
   }
 }

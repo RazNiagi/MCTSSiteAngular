@@ -14,7 +14,8 @@ export class QuartoComponent implements OnInit {
   constructor(private _quartoService: QuartoService) {}
 
   public ngOnInit(): void {
-    this.resetBoard();
+    // Start game automatically with default settings on first load
+    this._quartoService.resetBoard();
   }
 
   public isLoading(): boolean {
@@ -30,10 +31,10 @@ export class QuartoComponent implements OnInit {
   }
 
   public resetBoard(): void {
-    this._quartoService.resetBoard();
+    this.openNewGameDialog();
   }
 
-  public openSettingsDialog(): void {
+  public openNewGameDialog(): void {
     const dialogRef = this.dialog.open(QuartoSettingsDialogComponent, {
       width: '400px'
     });
@@ -41,7 +42,7 @@ export class QuartoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this._quartoService.setOptions(result);
-        this.resetBoard();
+        this._quartoService.resetBoard();
       }
     });
   }

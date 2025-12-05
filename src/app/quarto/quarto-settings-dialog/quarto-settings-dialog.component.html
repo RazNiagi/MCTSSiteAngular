@@ -1,6 +1,7 @@
-<h2 mat-dialog-title>Quarto Settings</h2>
+<h2 mat-dialog-title>New Game Options</h2>
 <mat-dialog-content>
   <div style="display: flex; flex-direction: column; gap: 20px;">
+    <p>What level bot would you like to play?</p>
     <mat-form-field>
       <mat-label>Bot Level</mat-label>
       <mat-select [(ngModel)]="options.botLevel" required>
@@ -15,5 +16,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancelClick()">Cancel</button>
-  <button mat-button (click)="onSaveClick()">Save</button>
+  <button mat-button (click)="onPlayClick()">Play</button>
 </mat-dialog-actions>

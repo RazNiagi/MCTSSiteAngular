@@ -26,7 +26,7 @@ export class QuartoService {
   private _loading: boolean = false;
   private _gameOver: boolean = false;
   private _currentGameState: QuartoGameState;
-  private _options: QuartoOptions = new QuartoOptions(true, 1);
+  private _options: QuartoOptions = new QuartoOptions(false, 1);
 
   constructor(private _httpClient: HttpClient) {
     this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES]);
