@@ -29,7 +29,7 @@ export class QuartoService {
   private _options: QuartoOptions = new QuartoOptions(false, 1);
 
   constructor(private _httpClient: HttpClient) {
-    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES]);
+    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES], false, this._options.playFirst);
     this.loadOptionsFromSessionStorage();
   }
 
@@ -110,7 +110,7 @@ export class QuartoService {
 
   public resetBoard(): void {
     this._loading = true;
-    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES]);
+    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES], false, this._options.playFirst);
     this._gameOver = false;
 
     if (!this._options.playFirst) {
@@ -156,7 +156,7 @@ export class QuartoService {
           return;
         }
 
-        if (this._currentGameState.availablePieces.length === 0) {
+        if (this._currentGameState.availablePieces.length === 0 && this._currentGameState.selectedPiece === '') {
           this._currentGameState.setBoardGameScore(BoardGameScore.TIE);
           this.popSnackbarIfApplicable();
           this._gameOver = true;
@@ -258,14 +258,18 @@ export class QuartoService {
       return false;
     }
 
-    let tempPieces = pieces.map(p => (p.charCodeAt(0) - 65) & 0b1111);
-    tempPieces.forEach(p => p = p & 0b1111); // Keep only the last 4 bits
+    // Convert pieces to their numeric values (0-15)
+    const values = pieces.map(p => p.charCodeAt(0) - 65);
 
-    if ((tempPieces[0] & tempPieces[1] & tempPieces[2] & tempPieces[3]) !== 0) {
+    // Check if all pieces share at least one attribute set to 1
+    if ((values[0] & values[1] & values[2] & values[3]) !== 0) {
       return true;
     }
-    tempPieces.forEach(p => p = (~p) & 0b1111); // Invert bits
-    if ((tempPieces[0] & tempPieces[1] & tempPieces[2] & tempPieces[3]) !== 0) {
+
+    // Check if all pieces share at least one attribute set to 0
+    // XOR with 0x0F (15) flips the lower 4 bits
+    const flipped = values.map(v => v ^ 0x0F);
+    if ((flipped[0] & flipped[1] & flipped[2] & flipped[3]) !== 0) {
       return true;
     }
 
@@ -273,23 +277,49 @@ export class QuartoService {
   }
 
   private popSnackbarIfApplicable(): void {
-    switch (this._currentGameState.getBoardGameScore()) {
-      case BoardGameScore.PLAYER_1_WIN:
-        this._snackbar.open('You win!', 'Ok', {
-          duration: 3000
-        });
-        break;
-      case BoardGameScore.PLAYER_2_WIN:
-        this._snackbar.open('Bot wins!', 'Ok', {
-          duration: 3000
-        });
-        break;
-      case BoardGameScore.TIE:
-        this._snackbar.open('Draw!', 'Ok', {
-          duration: 3000
-        });
-        break;
+    if (this._options.playFirst) {
+      switch (this._currentGameState.getBoardGameScore()) {
+        case BoardGameScore.PLAYER_1_WIN:
+          this.popWinningSnackbar();
+          break;
+        case BoardGameScore.PLAYER_2_WIN:
+          this.popLosingSnackbar();
+          break;
+        case BoardGameScore.TIE:
+          this.popTieSnackbar();
+          break;
+      }
+    } else {
+      switch (this._currentGameState.getBoardGameScore()) {
+        case BoardGameScore.PLAYER_1_WIN:
+          this.popLosingSnackbar();
+          break;
+        case BoardGameScore.PLAYER_2_WIN:
+          this.popWinningSnackbar();
+          break;
+        case BoardGameScore.TIE:
+          this.popTieSnackbar();
+          break;
+      }
     }
+  }
+
+  private popWinningSnackbar(): void {
+    this._snackbar.open('You win!', 'Ok', {
+      duration: 3000
+    });
+  }
+
+  private popLosingSnackbar(): void {
+    this._snackbar.open('Bot wins!', 'Ok', {
+      duration: 3000
+    });
+  }
+
+  private popTieSnackbar(): void {
+    this._snackbar.open('Draw!', 'Ok', {
+      duration: 3000
+    });
   }
 
   public getPieceAttributes(piece: string): { brown: boolean, tall: boolean, square: boolean, full: boolean } {
