@@ -6,7 +6,6 @@ export class QuartoGameState extends BaseGameState {
   selectedPiece: string;
   advancedMode: boolean = false;
 
-
   constructor(board: string[][], currentTurn: string, availablePieces: string[], advancedMode: boolean, selectedPiece: string = '', boardGameScore: BoardGameScore = BoardGameScore.UNDETERMINED) {
     super(board, currentTurn, boardGameScore);
     this.availablePieces = availablePieces;

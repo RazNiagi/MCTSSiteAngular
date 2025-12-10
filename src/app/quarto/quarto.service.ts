@@ -22,6 +22,8 @@ export class QuartoService {
     ["-", "-", "-", "-"]
   ];
   private static ALL_PIECES: string[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'];
+  private static readonly ATTRIBUTE_MASK = 0x0F;
+  private static readonly PIECE_A_CHAR_CODE = 65;
 
   private _loading: boolean = false;
   private _gameOver: boolean = false;
@@ -276,7 +278,7 @@ export class QuartoService {
     }
 
     // Convert pieces to their numeric values (0-15)
-    const values = pieces.map(p => p.charCodeAt(0) - 65);
+    const values = pieces.map(p => p.charCodeAt(0) - QuartoService.PIECE_A_CHAR_CODE);
 
     // Check if all pieces share at least one attribute set to 1
     if ((values[0] & values[1] & values[2] & values[3]) !== 0) {
@@ -285,10 +287,8 @@ export class QuartoService {
 
     // Check if all pieces share at least one attribute set to 0
     // XOR with 0x0F (15) flips the lower 4 bits
-    const flipped = values.map(v => v ^ 0x0F);
+    const flipped = values.map(v => v ^ QuartoService.ATTRIBUTE_MASK);
     return (flipped[0] & flipped[1] & flipped[2] & flipped[3]) !== 0;
-
-
   }
 
   private popSnackbarIfApplicable(): void {
@@ -341,7 +341,7 @@ export class QuartoService {
     if (piece === '-') {
       return { brown: false, tall: false, square: false, full: false };
     }
-    const value = piece.charCodeAt(0) - 65;
+    const value = piece.charCodeAt(0) - QuartoService.PIECE_A_CHAR_CODE;
     return {
       brown: (value & 1) !== 0,
       tall: (value & 2) !== 0,
