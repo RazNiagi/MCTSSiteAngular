@@ -29,7 +29,7 @@ export class QuartoService {
   private _options: QuartoOptions = new QuartoOptions(false, 1, false);
 
   constructor(private _httpClient: HttpClient) {
-    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES], false, this._options.playFirst);
+    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES], false);
     this.loadOptionsFromSessionStorage();
   }
 
@@ -114,7 +114,7 @@ export class QuartoService {
 
   public resetBoard(): void {
     this._loading = true;
-    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES], false, this._options.playFirst);
+    this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES], false);
     this._gameOver = false;
 
     if (!this._options.playFirst) {
