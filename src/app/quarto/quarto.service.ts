@@ -174,19 +174,58 @@ export class QuartoService {
       },
       error: error => {
         console.error(error);
+        this._loading = false;
+
         if (error.status === 0) {
           this._snackbar.openFromComponent(ConnectionErrorSnackbarComponent, {
             duration: 3000
           });
+          return;
         }
-        if (error.status === 400 && error.error === 'Level must be between 1 and 10') {
-          this._snackbar.openFromComponent(LevelErrorSnackbarComponent, {
+
+        // Handle structured error responses
+        if (error.error && error.error.errorCode) {
+          this.handleErrorResponse(error.error);
+        } else {
+          // Fallback for unstructured errors
+          this._snackbar.open('An error occurred while processing your move', 'Ok', {
             duration: 3000
           });
         }
-        this._loading = false;
       }
     });
+  }
+
+  private handleErrorResponse(errorResponse: any): void {
+    const errorCode = errorResponse.errorCode;
+    const message = errorResponse.message;
+
+    switch (errorCode) {
+      case 'INVALID_LEVEL':
+        this._snackbar.open('Invalid bot level selected', 'Ok', {
+          duration: 3000
+        });
+        break;
+      case 'NO_PIECE_SELECTED':
+        this._snackbar.open('No piece is selected to place', 'Ok', {
+          duration: 3000
+        });
+        break;
+      case 'INVALID_GAME_STATE':
+        this._snackbar.open('Invalid game state: ' + message, 'Ok', {
+          duration: 3000
+        });
+        break;
+      case 'INTERNAL_ERROR':
+        this._snackbar.open('Server error occurred. Please try again.', 'Ok', {
+          duration: 3000
+        });
+        break;
+      default:
+        this._snackbar.open(message || 'An error occurred', 'Ok', {
+          duration: 3000
+        });
+    }
   }
 
   public placePiece(row: number, col: number): void {
