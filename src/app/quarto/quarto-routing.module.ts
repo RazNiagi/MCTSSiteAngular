@@ -5,7 +5,8 @@ import {QuartoComponent} from './quarto.component';
 const routes: Routes = [
   {
     path: '',
-    component: QuartoComponent
+    component: QuartoComponent,
+    title: 'JV Dev Quarto'
   }
 ];
 

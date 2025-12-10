@@ -5,7 +5,8 @@ import {OnitamaComponent} from './onitama.component';
 const routes: Routes = [
   {
     path: '',
-    component: OnitamaComponent
+    component: OnitamaComponent,
+    title: 'JV Dev Onitama'
   }
 ];
 

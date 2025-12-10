@@ -5,7 +5,8 @@ import {ConnectFourComponent} from './connect-four.component';
 const routes: Routes = [
   {
     path: '',
-    component: ConnectFourComponent
+    component: ConnectFourComponent,
+    title: 'JV Dev Connect Four'
   }
 ];
 
