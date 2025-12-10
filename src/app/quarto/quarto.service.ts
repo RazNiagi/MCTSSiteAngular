@@ -286,11 +286,9 @@ export class QuartoService {
     // Check if all pieces share at least one attribute set to 0
     // XOR with 0x0F (15) flips the lower 4 bits
     const flipped = values.map(v => v ^ 0x0F);
-    if ((flipped[0] & flipped[1] & flipped[2] & flipped[3]) !== 0) {
-      return true;
-    }
+    return (flipped[0] & flipped[1] & flipped[2] & flipped[3]) !== 0;
 
-    return false;
+
   }
 
   private popSnackbarIfApplicable(): void {
