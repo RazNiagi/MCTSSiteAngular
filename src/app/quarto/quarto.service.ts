@@ -26,7 +26,7 @@ export class QuartoService {
   private _loading: boolean = false;
   private _gameOver: boolean = false;
   private _currentGameState: QuartoGameState;
-  private _options: QuartoOptions = new QuartoOptions(false, 1);
+  private _options: QuartoOptions = new QuartoOptions(false, 1, false);
 
   constructor(private _httpClient: HttpClient) {
     this._currentGameState = new QuartoGameState(this.getEmptyBoard(), '1', [...QuartoService.ALL_PIECES], false, this._options.playFirst);
@@ -88,6 +88,10 @@ export class QuartoService {
     return this._options.playFirst;
   }
 
+  public getAdvancedMode(): boolean {
+    return this._options.advancedMode;
+  }
+
   public getOptions(): QuartoOptions {
     return this._options;
   }
@@ -143,7 +147,7 @@ export class QuartoService {
 
   private retrieveBotPlacement(): void {
     this._loading = true;
-    const dto = new QuartoGameStateDto(this._currentGameState, this._options.botLevel);
+    const dto = new QuartoGameStateDto(this._currentGameState, this._options.botLevel, this._options.advancedMode);
 
     this._httpClient.post<QuartoGameState>(this.API_BASE_URL + '/place-piece', dto).subscribe({
       next: data => {
@@ -236,6 +240,19 @@ export class QuartoService {
         hasWin = true;
       } else if (this.checkLine([board[0][3], board[1][2], board[2][1], board[3][0]])) {
         hasWin = true;
+      }
+    }
+
+    // Check 2x2 squares in advanced mode
+    if (!hasWin && this._options.advancedMode) {
+      for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 3; col++) {
+          if (this.checkLine([board[row][col], board[row][col + 1], board[row + 1][col], board[row + 1][col + 1]])) {
+            hasWin = true;
+            break;
+          }
+        }
+        if (hasWin) break;
       }
     }
 

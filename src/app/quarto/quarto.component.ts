@@ -30,6 +30,10 @@ export class QuartoComponent implements OnInit {
     return this._quartoService.getPlayFirst();
   }
 
+  public getAdvancedMode(): boolean {
+    return this._quartoService.getAdvancedMode();
+  }
+
   public resetBoard(): void {
     this.openNewGameDialog();
   }
