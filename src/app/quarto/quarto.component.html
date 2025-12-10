@@ -1,0 +1,30 @@
+<div class="container-fluid" id="quarto-container">
+  <div class="row row-height-10">
+    <div class="col-4"></div>
+    <div class="col-2 flex-center">
+      <mat-chip [disabled]="true">Bot Level: {{getBotLevel()}}</mat-chip>
+    </div>
+    <div class="col-2 flex-center">
+      <mat-chip [disabled]="true" *ngIf="getAdvancedMode()">Advanced Mode</mat-chip>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-1 flex-center">
+      <mat-spinner *ngIf="isLoading()" class="half-size-spinner"></mat-spinner>
+    </div>
+  </div>
+  <div class="row row-height-80">
+    <div class="col-12 flex-center-full">
+      <app-quarto-board></app-quarto-board>
+    </div>
+  </div>
+  <div class="row row-height-10">
+    <div class="col-5"></div>
+    <div class="col-2 flex-center-full">
+      <button mat-fab extended (click)="resetBoard()">
+        <mat-icon>add</mat-icon>
+        New Game
+      </button>
+    </div>
+    <div class="col-5"></div>
+  </div>
+</div>

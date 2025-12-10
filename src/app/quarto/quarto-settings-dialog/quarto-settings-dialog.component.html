@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>New Game Options</h2>
+<mat-dialog-content>
+  <div class="dialog-content-container">
+    <p>What level bot would you like to play?</p>
+    <mat-form-field>
+      <mat-label>Bot Level</mat-label>
+      <mat-select [(ngModel)]="options.botLevel" required>
+        <mat-option [value]="level" *ngFor="let level of botLevels">{{level}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="options.playFirst">
+      Play First
+    </mat-checkbox>
+
+    <mat-checkbox [(ngModel)]="options.advancedMode">
+      Advanced Mode (2x2 squares also win)
+    </mat-checkbox>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button (click)="onPlayClick()">Play</button>
+</mat-dialog-actions>
